@@ -1,8 +1,10 @@
-// src/Dashboard.js
+// src/pages/Dashboard/Dashboard.jsx
 import React from 'react';
 import { Layout, Menu, Card, Row, Col, Avatar, Button, List, Progress, Typography } from 'antd';
 import { UserOutlined, MailOutlined, TeamOutlined, DollarOutlined, LineChartOutlined, DownloadOutlined } from '@ant-design/icons';
-import '../../styles/dashboard.css';
+import { useNavigate } from 'react-router-dom';
+import LineChart from '../../components/LineChart/LineChart';
+import StatBox from '../../components/StatBox/StaBox';
 
 const { Header, Content, Sider } = Layout;
 const { Title, Text } = Typography;
@@ -14,31 +16,36 @@ const data = [
 ];
 
 const Dashboard = () => {
+  const navigate = useNavigate();
+
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider collapsible>
         <div className="logo">
           <Avatar size="large" src="https://i.pravatar.cc/150?img=3" />
           <div className="user-info">
-            <Title level={4} style={{color: 'white'}}>Ed Roh</Title>
+            <Title level={4} style={{ color: 'white' }}>Ed Roh</Title>
             <Text className="white-text">VP Fancy Admin</Text>
           </div>
         </div>
-        <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
-          <Menu.Item key="1" icon={<UserOutlined />}>
+        <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" onClick={({ key }) => navigate(key)}>
+          <Menu.Item key="/dashboard" icon={<UserOutlined />}>
             Dashboard
           </Menu.Item>
-          <Menu.Item key="2" icon={<TeamOutlined />}>
+          <Menu.Item key="/team" icon={<TeamOutlined />}>
             Manage Team
           </Menu.Item>
-          <Menu.Item key="3" icon={<MailOutlined />}>
+          <Menu.Item key="/contact" icon={<MailOutlined />}>
             Contacts Information
           </Menu.Item>
-          <Menu.Item key="4" icon={<DollarOutlined />}>
+          <Menu.Item key="/order" icon={<DollarOutlined />}>
             Invoices Balances
           </Menu.Item>
-          <Menu.Item key="5" icon={<LineChartOutlined />}>
+          <Menu.Item key="/profile" icon={<LineChartOutlined />}>
             Profile Form
+          </Menu.Item>
+          <Menu.Item key="/orders" icon={<LineChartOutlined />}>
+            View Order
           </Menu.Item>
         </Menu>
       </Sider>
@@ -52,55 +59,63 @@ const Dashboard = () => {
           <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
             <Row gutter={[16, 16]}>
               <Col span={6}>
-                <Card title={<span className="card-title">Emails Sent</span>} bordered={false}>
-                  <p>12,361</p>
-                  <Progress percent={14} status="active" />
-                </Card>
-              </Col>
+                <StatBox
+                  title="32,441"
+                  subtitle="New Clients"
+                  progress={0.30}
+                  increase="+5%"
+                />            </Col>
               <Col span={6}>
-                <Card title={<span className="card-title">Sales Obtained</span>} bordered={false}>
-                  <p>431,225</p>
-                  <Progress percent={21} status="active" />
-                </Card>
-              </Col>
+                <StatBox
+                  title="32,441"
+                  subtitle="New Clients"
+                  progress={0.30}
+                  increase="+5%"
+                />              </Col>
               <Col span={6}>
-                <Card title={<span className="card-title">New Clients</span>} bordered={false}>
-                  <p>32,441</p>
-                  <Progress percent={5} status="active" />
-                </Card>
-              </Col>
+                <StatBox
+                  title="32,441"
+                  subtitle="New Clients"
+                  progress={0.30}
+                  increase="+5%"
+                />              </Col>
               <Col span={6}>
-                <Card title={<span className="card-title">Traffic Received</span>} bordered={false}>
-                  <p>1,325,134</p>
-                  <Progress percent={43} status="active" />
-                </Card>
+                <StatBox
+                  title="32,441"
+                  subtitle="New Clients"
+                  progress={0.30}
+                  increase="+5%"
+                />
               </Col>
+              <Col span={14}>
+                <Card title={'Revenue Generated'} bordered={false} style={{ marginTop: 16 }}>
+                  <LineChart isDashboard={true} />
+                  <Button type="primary" style={{ marginTop: 16 }} icon={<DownloadOutlined />}>
+                Download Reports
+              </Button>
+                </Card></Col>
+
+            
+              <Col span={10}>
+                <Card title="Recent Transactions" bordered={false} style={{ marginTop: 16 }}>
+                  <List
+                    itemLayout="horizontal"
+                    dataSource={data}
+                    renderItem={item => (
+                      <List.Item>
+                        <List.Item.Meta
+                          title={<a href="https://ant.design">{item.id}</a>}
+                          description={`${item.name} - ${item.date}`}
+                        />
+                        <div className='color'>{item.amount}</div>
+                      </List.Item>
+                    )}
+                  />
+                </Card></Col>
+
             </Row>
-            <Card title={<span className="card-title">Revenue Generated</span>} bordered={false} style={{ marginTop: 16 }}>
-              <p>$59,342.32</p>
-              {/* A placeholder for a potential chart */}
-              <div className="revenue-chart-placeholder">
-                <p>Chart Placeholder</p>
-              </div>
-            </Card>
-            <Button type="primary" style={{ marginTop: 16 }} icon={<DownloadOutlined />}>
-              Download Reports
-            </Button>
-            <Card title={<span className="card-title">Recent Transactions</span>} bordered={false} style={{ marginTop: 16 }}>
-              <List
-                itemLayout="horizontal"
-                dataSource={data}
-                renderItem={item => (
-                  <List.Item>
-                    <List.Item.Meta
-                      title={<a href="https://ant.design">{item.id}</a>}
-                      description={`${item.name} - ${item.date}`}
-                    />
-                    <div>{item.amount}</div>
-                  </List.Item>
-                )}
-              />
-            </Card>
+
+
           </div>
         </Content>
       </Layout>

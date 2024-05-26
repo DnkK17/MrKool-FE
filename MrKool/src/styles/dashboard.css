@@ -36,3 +36,10 @@
   background-color: #f0f0f0;
   border: 1px dashed #d9d9d9;
 }
+.color{
+  background-color: #1677FF;
+  border-radius: 2rem;
+  padding: 2px;
+  font-weight: 400;
+  color: #f0f0f0;
+}
