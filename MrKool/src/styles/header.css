@@ -1,0 +1,202 @@
+.header {
+  width: 100%;
+  height: 120px;
+  line-height: 80px;
+  user-select: none;
+  color:#020286 ;
+  background-color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo {
+  text-align: start;
+}
+
+.logo img {
+  height: auto;
+  width: 150px;
+  object-fit: contain;
+  filter: drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.1));
+}
+
+.logo h5 {
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: #020286;
+  margin-top: -10px;
+  margin-bottom: 0;
+}
+
+.menu a {
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: #020286;
+  transition: 0.3s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.menu a:hover {
+  color: #020286;
+}
+
+/* khi click vao phan menu do thi no doi thanh mau hover luon */
+.active__menu {
+  color:#020286 !important;
+}
+
+.cart_icon svg,
+.user svg,
+.mobile_menu svg {
+  font-size: 1.5rem;
+  color: #020286;
+}
+
+.cart_icon {
+  position: relative;
+}
+
+.cart_badge {
+  position: absolute;
+  top: 16px;
+  right: -10px;
+  background: #ffffff;
+  color: #020286;
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mobile_menu {
+  font-weight: 600;
+  display: none;
+}
+
+.header_shrink {
+  position: sticky;
+  top: 0;
+  left: 0;
+  box-shadow: 5px 5px 15px -5px #fde4e4;
+}
+
+@media only screen and (max-width: 992px) {
+  .logo img {
+    width: calc(100% - 60%);
+  }
+
+  .logo h5 {
+    font-size: 1rem;
+    margin-top: -10px;
+  }
+
+  .navigation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.425);
+    z-index: 99;
+    display: none;
+  }
+
+  .menu {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 250px;
+    height: 100%;
+    background: #f8a345;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    line-height: 20px;
+  }
+
+  .menu a {
+    font-size: 1.5rem;
+  }
+
+  .mobile_menu {
+    display: block;
+  }
+
+  .cart_icon svg,
+  .user svg,
+  .mobile_menu svg {
+    font-size: 0.8rem;
+  }
+
+  .show_menu {
+    display: block;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .header {
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+  }
+
+  .logo img {
+    width: calc(100% - 80%);
+  }
+
+  .logo h5 {
+    font-size: 0.7rem;
+    margin-top: -15px;
+  }
+
+  .navigation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.425);
+    z-index: 99;
+    display: none;
+  }
+
+  .menu {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 150px;
+    height: 100%;
+    background: #f8a345;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    line-height: 20px;
+  }
+
+  .menu a {
+    font-size: 1rem;
+  }
+
+  .mobile_menu {
+    display: block;
+  }
+
+  .cart_icon svg,
+  .user svg,
+  .mobile_menu svg {
+    font-size: 0.5rem;
+  }
+
+  .show_menu {
+    display: block;
+  }
+}

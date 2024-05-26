@@ -1,0 +1,78 @@
+.home-container {
+  width: 100%;
+  margin: 0 auto;
+}
+.hero-section {
+  background-color: #020286;
+  background-image: url("https://cdni.iconscout.com/illustration/premium/thumb/air-conditioning-repairing-and-installation-5755827-4805630.png?");
+  background-repeat: no-repeat;
+  background-position: right;
+  background-size: auto;
+  padding: 100px 0;
+}
+.hero-content {
+  padding: 0 3rem;
+}
+
+.hero-title {
+  color: aliceblue;
+  font-size: 36px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  animation: rise 2s ease-in-out infinite;
+}
+.hero-subtitle {
+  color: aliceblue;
+  font-size: 1.5rem;
+  margin-bottom: 30px;
+}
+
+.hero-btn {
+  color: #020286;
+  margin-right: 2rem;
+}
+@keyframes rise {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+.services-section {
+  padding: 50px 0;
+}
+
+.section-title {
+  color: #020286;
+  margin-bottom: 30px;
+  font-size: 2.5rem;
+}
+
+.service-card {
+  margin: 0 3rem;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  height: 100%;
+}
+
+.service-icon {
+  font-size: 3rem;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+}
+/* Price Table Section */
+.price-table-section {
+  padding: 50px 0;
+}
+
+.price-table-section .section-title {
+  color: #020286;
+  margin-bottom: 30px;
+  font-size: 2.5rem;
+}
