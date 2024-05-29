@@ -6,6 +6,7 @@ import Login from "./pages/Common/Login.jsx";
 import AdminLayout from "./pages/AdminLayout.jsx";
 import UserLayout from "./pages/UserLayout.jsx";
 import ServiceDetail from "./pages/Common/ServiceDetail.jsx";
+import Booking from "./pages/Common/Booking.jsx";
 import Service from "./pages/Manager/Service.jsx"
 import Station from "./pages/Manager/Station.jsx"
 import Invoice from "./pages/Manager/Invoice.jsx"
@@ -26,6 +27,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="/service" element={<OurServices />} />
           <Route path="/service/:id" element={<ServiceDetail />} />
+          <Route path="/booking" element={<Booking/>}/>
         </Route>
       </Routes>
     </div>

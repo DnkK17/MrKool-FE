@@ -36,66 +36,68 @@ const Login = () => {
   };
 
   return (
-    <div className={`container ${isSignUp ? 'active' : ''}`} id="container">
-      <div className={`form-container ${isSignUp ? 'sign-up' : 'sign-in'}`}>
-        <Form
-          form={form}
-          name={isSignUp ? 'signUp' : 'signIn'}
-          initialValues={{ remember: true }}
-          onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
-        >
-          <h1>{isSignUp ? 'Create Account' : 'Sign In'}</h1>
-          <div className="social-icons">
-            <a href="#" className="icon"><GooglePlusOutlined /></a>
-            <a href="#" className="icon"><FacebookOutlined /></a>
-            <a href="#" className="icon"><GithubOutlined /></a>
-            <a href="#" className="icon"><LinkedinOutlined /></a>
-          </div>
-          <span>{isSignUp ? 'or use your email for registration' : 'or use your email for login'}</span>
-          {isSignUp && (
+    <div className='login-container'>
+      <div className={`container ${isSignUp ? 'active' : ''}`} id="container">
+        <div className={`form-container ${isSignUp ? 'sign-up' : 'sign-in'}`}>
+          <Form
+            form={form}
+            name={isSignUp ? 'signUp' : 'signIn'}
+            initialValues={{ remember: true }}
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+          >
+            <h1>{isSignUp ? 'Create Account' : 'Sign In'}</h1>
+            <div className="social-icons">
+              <a href="#" className="icon"><GooglePlusOutlined /></a>
+              <a href="#" className="icon"><FacebookOutlined /></a>
+              <a href="#" className="icon"><GithubOutlined /></a>
+              <a href="#" className="icon"><LinkedinOutlined /></a>
+            </div>
+            <span>{isSignUp ? 'or use your email for registration' : 'or use your email for login'}</span>
+            {isSignUp && (
+              <Form.Item
+                name="name"
+                rules={[{ required: true, message: 'Please input your name!' }]}
+              >
+                <Input placeholder="Name" />
+              </Form.Item>
+            )}
             <Form.Item
-              name="name"
-              rules={[{ required: true, message: 'Please input your name!' }]}
+              name="email"
+              rules={[{ required: true, message: 'Please input your email!' }]}
             >
-              <Input placeholder="Name" />
+              <Input placeholder="Email" />
             </Form.Item>
-          )}
-          <Form.Item
-            name="email"
-            rules={[{ required: true, message: 'Please input your email!' }]}
-          >
-            <Input placeholder="Email" />
-          </Form.Item>
-          <Form.Item
-            name="password"
-            rules={[{ required: true, message: 'Please input your password!' }]}
-          >
-            <Input.Password placeholder="Password" />
-          </Form.Item>
-          {!isSignUp && <a href="#">Forget Your Password?</a>}
-          <Form.Item>
-            <Button type="primary" htmlType="submit">
-              {isSignUp ? 'Sign Up' : 'Sign In'}
-            </Button>
-          </Form.Item>
-        </Form>
-      </div>
-      <div className="toggle-container">
-        <div className="toggle">
-          <div className="toggle-panel toggle-left">
-            <h1>Welcome Back!</h1>
-            <p>Enter your personal details to use all of the site features</p>
-            <Button className="hidden" id="login" onClick={() => setIsSignUp(false)}>
-              Sign In
-            </Button>
-          </div>
-          <div className="toggle-panel toggle-right">
-            <h1>Hello, Friend!</h1>
-            <p>Register with your personal details to use all of the site features</p>
-            <Button className="hidden" id="register" onClick={() => setIsSignUp(true)}>
-              Sign Up
-            </Button>
+            <Form.Item
+              name="password"
+              rules={[{ required: true, message: 'Please input your password!' }]}
+            >
+              <Input.Password placeholder="Password" />
+            </Form.Item>
+            {!isSignUp && <a href="#">Forget Your Password?</a>}
+            <Form.Item>
+              <Button type="primary" htmlType="submit">
+                {isSignUp ? 'Sign Up' : 'Sign In'}
+              </Button>
+            </Form.Item>
+          </Form>
+        </div>
+        <div className="toggle-container">
+          <div className="toggle">
+            <div className="toggle-panel toggle-left">
+              <h1>Welcome Back!</h1>
+              <p>Enter your personal details to use all of the site features</p>
+              <Button className="hidden" id="login" onClick={() => setIsSignUp(false)}>
+                Sign In
+              </Button>
+            </div>
+            <div className="toggle-panel toggle-right">
+              <h1>Hello, Friend!</h1>
+              <p>Register with your personal details to use all of the site features</p>
+              <Button className="hidden" id="register" onClick={() => setIsSignUp(true)}>
+                Sign Up
+              </Button>
+            </div>
           </div>
         </div>
       </div>

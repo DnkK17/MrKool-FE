@@ -30,7 +30,7 @@ const Header = () => {
     <header className="header">
       <div className="nav_wrapper d-flex align-items-center justify-content-between">
         <div className="logo">
-          <Link to="/home">
+          <Link to="/">
             <img src={Logo} alt="Logo" />
           </Link>
         </div>
