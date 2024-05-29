@@ -3,29 +3,9 @@ import { Button, Col, Row, Card, Table } from 'antd';
 import "../../styles/home.css";
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchProduct } from '../../redux/slice/productSlice';
+import { useNavigate } from 'react-router-dom';
 
 const { Meta } = Card;
-
-// const services = [
-//   {
-//     icon: <ToolFilled className="service-icon" />,
-//     title: 'AC Repair',
-//     description: 'Quick and reliable AC repair services.',
-//     image: 'https://cdni.iconscout.com/illustration/premium/thumb/engineer-repairing-robot-4646990-3858613.png'
-//   },
-//   {
-//     icon: <ToolFilled className="service-icon" />,
-//     title: 'AC Installation',
-//     description: 'Professional AC installation for your home or office.',
-//     image: 'https://cdni.iconscout.com/illustration/premium/thumb/laptop-repair-or-service-5575548-4648267.png'
-//   },
-//   {
-//     icon: <ToolOutlined className="service-icon" />,
-//     title: 'Maintenance',
-//     description: 'Preventive maintenance to keep your AC running smoothly.',
-//     image: 'https://cdni.iconscout.com/illustration/premium/thumb/laptop-repair-or-service-5575548-4648267.png'
-//   },
-// ];
 
 const priceTableColumns = [
   {
@@ -61,8 +41,9 @@ const priceTableData = [
 
 const Home = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const data = useSelector(state => state.product);
-  useEffect(() =>{
+  useEffect(() => {
     dispatch(fetchProduct())
   }, [dispatch])
   console.log(data);
@@ -88,15 +69,29 @@ const Home = () => {
           </Col>
         </Row>
         <Row gutter={[16, 16]} justify="center">
-          {data.data.filter((service) =>service.bestSeller).map((service, index) => (
-            <Col xs={24} sm={12} md={8} key={index} className="service-col">
-              <Card className="service-card" hoverable cover={<img alt={service.serviceName} src={service.imageUrl} />}>
-                <div className="service-icon">{service.price}</div>
-                <Meta title={service.serviceName} description={service.description} />
+          {data.data.filter((service) => service.bestSeller).map((service, index) => (
+            <Col xs={24} sm={12} md={6} key={index} className="service-col">
+              <Card
+                className="service-card"
+                hoverable
+                style={{ width: '100%' }}
+                cover={<img alt={service.serviceName} src={service.imageUrl} style={{ height: '150px', objectFit: 'cover' }} />}
+                actions={[
+                  <Button key="detail" type="primary" size="small" onClick={() => navigate(`/service/${service.serviceID}`)}>
+                    View Detail
+                  </Button>
+
+                ]}
+              >
+                <Meta title={service.serviceName} description={service.description} style={{ fontSize: '14px' }} />
               </Card>
             </Col>
           ))}
+
         </Row>
+        <Button key="more" type="link" size="small" onClick={() => navigate('/service')}>
+          See More
+        </Button>
       </div>
       <div className="price-table-section">
         <Row justify="center" align="middle">
@@ -106,7 +101,12 @@ const Home = () => {
         </Row>
         <Row justify="center">
           <Col xs={24} md={18}>
-            <Table columns={priceTableColumns} dataSource={priceTableData} pagination={false} />
+            <Table
+              columns={priceTableColumns}
+              dataSource={priceTableData}
+              pagination={false}
+              className="price-table"
+            />
           </Col>
         </Row>
       </div>

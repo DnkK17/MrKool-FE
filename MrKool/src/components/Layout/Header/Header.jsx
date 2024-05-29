@@ -29,7 +29,6 @@ const Header = () => {
   return (
     <header className="header">
       <div className="nav_wrapper d-flex align-items-center justify-content-between">
-        {/* Logo */}
         <div className="logo">
           <Link to="/home">
             <img src={Logo} alt="Logo" />

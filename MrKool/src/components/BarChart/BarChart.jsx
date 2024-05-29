@@ -1,130 +1,33 @@
-import { ConfigProvider } from 'antd';
-import { ResponsiveBar } from '@nivo/bar';
-import { mockBarData as data } from '../data/mockData';
+import React from 'react';
+import { BarChart as RechartBarChart, Bar, CartesianGrid, Legend, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
 import PropTypes from 'prop-types';
-
-const BarChart = ({ isDashboard = false }) => {
+const data = [
+  { name: 'Tháng 6', 'Tổng đơn hàng': 4000, 'Tổng doanh thu': 2400, amt: 2400 },
+  { name: 'Tháng 7', 'Tổng đơn hàng': 3000, 'Tổng doanh thu': 1398, amt: 2210 },
+  { name: 'Tháng 8', 'Tổng đơn hàng': 2000, 'Tổng doanh thu': 9800, amt: 2290 },
+  { name: 'Tháng 9', 'Tổng đơn hàng': 2780, 'Tổng doanh thu': 3908, amt: 2000 },
+  { name: 'Tháng 10', 'Tổng đơn hàng': 1890, 'Tổng doanh thu': 4800, amt: 2181 },
+  { name: 'Tháng 11', 'Tổng đơn hàng': 2390, 'Tổng doanh thu': 3800, amt: 2500 },
+  { name: 'Tháng 12', 'Tổng đơn hàng': 3490, 'Tổng doanh thu': 4300, amt: 2100 },
+];
+const BarChart = () => {
   return (
-    <ConfigProvider>
-      <ResponsiveBar
-        data={data}
-        theme={(theme) => ({
-          axis: {
-            domain: {
-              line: {
-                stroke: theme.colors.grey[0],
-              },
-            },
-            legend: {
-              text: {
-                fill: theme.colors.grey[0],
-              },
-            },
-            ticks: {
-              line: {
-                stroke: theme.colors.grey[0],
-                strokeWidth: 1,
-              },
-              text: {
-                fill: theme.colors.grey[0],
-              },
-            },
-          },
-          legends: {
-            text: {
-              fill: theme.colors.grey[0],
-            },
-          },
-        })}
-        keys={['hot dog', 'burger', 'sandwich', 'kebab', 'fries', 'donut']}
-        indexBy="country"
-        margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
-        padding={0.3}
-        valueScale={{ type: 'linear' }}
-        indexScale={{ type: 'band', round: true }}
-        colors={{ scheme: 'nivo' }}
-        defs={[
-          {
-            id: 'dots',
-            type: 'patternDots',
-            background: 'inherit',
-            color: '#38bcb2',
-            size: 4,
-            padding: 1,
-            stagger: true,
-          },
-          {
-            id: 'lines',
-            type: 'patternLines',
-            background: 'inherit',
-            color: '#eed312',
-            rotation: -45,
-            lineWidth: 6,
-            spacing: 10,
-          },
-        ]}
-        borderColor={{
-          from: 'color',
-          modifiers: [['darker', '1.6']],
-        }}
-        axisTop={null}
-        axisRight={null}
-        axisBottom={{
-          tickSize: 5,
-          tickPadding: 5,
-          tickRotation: 0,
-          legend: isDashboard ? undefined : 'country', // changed
-          legendPosition: 'middle',
-          legendOffset: 32,
-        }}
-        axisLeft={{
-          tickSize: 5,
-          tickPadding: 5,
-          tickRotation: 0,
-          legend: isDashboard ? undefined : 'food', // changed
-          legendPosition: 'middle',
-          legendOffset: -40,
-        }}
-        enableLabel={false}
-        labelSkipWidth={12}
-        labelSkipHeight={12}
-        labelTextColor={{
-          from: 'color',
-          modifiers: [['darker', 1.6]],
-        }}
-        legends={[
-          {
-            dataFrom: 'keys',
-            anchor: 'bottom-right',
-            direction: 'column',
-            justify: false,
-            translateX: 120,
-            translateY: 0,
-            itemsSpacing: 2,
-            itemWidth: 100,
-            itemHeight: 20,
-            itemDirection: 'left-to-right',
-            itemOpacity: 0.85,
-            symbolSize: 20,
-            effects: [
-              {
-                on: 'hover',
-                style: {
-                  itemOpacity: 1,
-                },
-              },
-            ],
-          },
-        ]}
-        role="application"
-        barAriaLabel={(e) => {
-          return `${e.id}: ${e.formattedValue} in country: ${e.indexValue}`;
-        }}
-      />
-    </ConfigProvider>
+    <ResponsiveContainer width="100%" height={300}>
+      <RechartBarChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="name" />
+        <YAxis />
+        <Tooltip />
+        <Legend />
+        <Bar dataKey="Tổng doanh thu" fill="#8884d8" />
+        <Bar dataKey="Tổng đơn hàng" fill="#82ca9d" />
+      </RechartBarChart>
+    </ResponsiveContainer>
   );
 };
+
 BarChart.propTypes = {
   isDashboard: PropTypes.bool,
 };
+
 export default BarChart;

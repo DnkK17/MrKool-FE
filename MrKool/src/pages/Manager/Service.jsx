@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { Layout, Menu, Avatar, Typography, Table, Tag, Input, Button, Space, Modal, Form, message } from 'antd';
-import { UserOutlined, MailOutlined, TeamOutlined, DollarOutlined, LineChartOutlined, SearchOutlined, PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Typography, Table, Tag, Input, Button, Space, Modal, Form, message } from 'antd';
+import { SearchOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import '../../styles/dashboard.css';
 
-const { Header, Content, Sider } = Layout;
 const { Title } = Typography;
 
 const ManageTeam = () => {
@@ -86,11 +85,6 @@ const ManageTeam = () => {
         text
       ),
   });
-
-  const handleAdd = () => {
-    setModalVisible(true);
-    setFormData({});
-  };
 
   const handleEdit = record => {
     setModalVisible(true);
@@ -185,47 +179,12 @@ const ManageTeam = () => {
   ];
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <Sider collapsible>
-        <div className="logo">
-          <Avatar size="large" src="https://i.pravatar.cc/150?img=3" />
-          <div className="user-info">
-            <Title level={4} className="white-text">Ed Roh</Title>
-            <p className="white-text">VP Fancy Admin</p>
-          </div>
-        </div>
-        <Menu theme="dark" defaultSelectedKeys={['2']} mode="inline">
-          <Menu.Item key="1" icon={<UserOutlined />}>
-            Dashboard
-          </Menu.Item>
-          <Menu.Item key="2" icon={<TeamOutlined />}>
-            Manage Team
-          </Menu.Item>
-          <Menu.Item key="3" icon={<MailOutlined />}>
-            Contacts Information
-          </Menu.Item>
-          <Menu.Item key="4" icon={<DollarOutlined />}>
-            Invoices Balances
-          </Menu.Item>
-          <Menu.Item key="5" icon={<LineChartOutlined />}>
-            Profile Form
-          </Menu.Item>
-        </Menu>
-      </Sider>
-      <Layout className="site-layout">
-        <Header className="site-layout-background" style={{ padding: 0 }}>
-          <div className="header-content">
-            <Title level={2} style={{ margin: '16px 24px' }}>TEAM</Title>
-            <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>Add User</Button>
-          </div>
-        </Header>
-        <Content style={{ margin: '0 16px' }}>
-          <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
-            <Title level={4}>Managing the Team Members</Title>
-            <Table columns={columns} dataSource={data} pagination={{ pageSize: 100 }} scroll={{ y: 240 }} />
-          </div>
-        </Content>
-      </Layout>
+    <div>
+      <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
+        <Title level={4}>Managing the Team Members</Title>
+        <Table columns={columns} dataSource={data} pagination={{ pageSize: 100 }} scroll={{ y: 240 }} />
+      </div>
+
       <Modal
         title={editingKey ? "Edit User" : "Add User"}
         visible={modalVisible}
@@ -280,7 +239,7 @@ const ManageTeam = () => {
           </Form.Item>
         </Form>
       </Modal>
-    </Layout>
+    </div>
   );
 };
 
