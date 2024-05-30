@@ -1,73 +1,45 @@
-import React from "react";
-import Logo from "../../../assets/images/Logo2.png";
-import { NavLink, Link } from "react-router-dom";
-import {
-  RiShoppingCartFill,
-  RiBearSmileFill,
-  RiMenu3Line,
-} from "@remixicon/react";
-import "../../../styles/header.css";
-
-const nav_links = [
-  {
-    display: "Home",
-    path: "/home",
-  },
-  {
-    display: "Our Services",
-    path: "/ourservices",
-  },
-  {
-    display: "Contact",
-    path: "/contact",
-  },
-];
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Menu, Button, Badge } from 'antd';
+import { ShoppingCartOutlined, UserOutlined, MenuOutlined } from '@ant-design/icons';
+import Logo from '../../../assets/images/Logo2.png';
+import '../../../styles/header.css';
 
 
 const Header = () => {
-
   return (
     <header className="header">
-      <div className="nav_wrapper d-flex align-items-center justify-content-between">
+      <div className="nav_wrapper">
         <div className="logo">
           <Link to="/">
             <img src={Logo} alt="Logo" />
           </Link>
         </div>
-
-        {/* Menu */}
-        <div className="navigation" >
-          <div className="menu d-flex align-items-center gap-5">
-            {nav_links.map((item, index) => (
-              <NavLink
-                to={item.path}
-                key={index}
-                className={(navClass) =>
-                  navClass.isActive ? "active__menu" : ""
-                }
-              >
-                {item.display}
-              </NavLink>
-            ))}
-          </div>
-        </div>
-
-        {/* nav right icons */}
-        <div className="nav_right d-flex align-items-center gap-4">
-          <span className="cart_icon">
-            <Link to="/cart">
-              <RiShoppingCartFill></RiShoppingCartFill>
-              <span className="cart_badge">2</span>
-            </Link>
-          </span>
-          <span className="user">
+        <Menu mode="horizontal" className="navigation">
+          <Menu.Item key="home" style={{color: ' #020286'}} >
+            <Link to="/home">Home</Link>
+          </Menu.Item>
+          <Menu.Item key="services"  style={{color: ' #020286'}}>
+            <Link to="/ourservices">Our Services</Link>
+          </Menu.Item>
+          <Menu.Item key="contact"  style={{color: ' #020286'}}>
+            <Link to="/contact">Contact</Link>
+          </Menu.Item>
+        </Menu>
+        <div className="nav_right">
+          {/* <Badge count={2} className="cart_icon">
+            <Button type="link" size="large">
+              <Link to="/cart">
+                <ShoppingCartOutlined />
+              </Link>
+            </Button>
+          </Badge> */}
+          <Button type="link" size="large" className="user">
             <Link to="/login">
-              <RiBearSmileFill></RiBearSmileFill>
+              <UserOutlined />
             </Link>
-          </span>
-          <span className="mobile_menu">
-            <RiMenu3Line></RiMenu3Line>
-          </span>
+          </Button>
+  
         </div>
       </div>
     </header>
