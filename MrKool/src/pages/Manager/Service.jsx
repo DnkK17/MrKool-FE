@@ -179,10 +179,10 @@ const ManageTeam = () => {
   ];
 
   return (
-    <div>
+    <div className='account-container'>
       <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
         <Title level={4}>Managing the Team Members</Title>
-        <Table columns={columns} dataSource={data} pagination={{ pageSize: 100 }} scroll={{ y: 240 }} />
+        <Table columns={columns} dataSource={data} pagination={{ pageSize: 100 }} />
       </div>
 
       <Modal
