@@ -79,7 +79,7 @@ const OurServices = () => {
                   >
                     <div className="card-content">
                       <h3>{service.serviceName}</h3>
-                      <p>{service.description}</p>
+                      <p>${service.price}</p>
                       <Button type="primary" onClick={() => handleViewDetail(service.serviceID)}>
                         Booking
                       </Button>

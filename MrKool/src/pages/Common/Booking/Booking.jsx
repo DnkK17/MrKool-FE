@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Progress } from 'antd';
+import { Button, Progress } from 'antd';
 import Step1 from './Step1';
+import Step2 from './Step2';
 
 const BookingPage = () => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -20,23 +21,22 @@ const BookingPage = () => {
       {currentStep === 1 && (
         <div>
           <Step1 />
-          <button onClick={handleNextStep}>Next</button>
+          <Button onClick={handleNextStep}>Next</Button>
         </div>
       )}
       {currentStep === 2 && (
         <div>
-          {/* Step 2 content - Fill address and choose time and date */}
-          {/* Example content */}
-          <button onClick={handlePrevStep}>Previous</button>
-          <button onClick={handleNextStep}>Next</button>
+         <Step2/>
+          <Button onClick={handlePrevStep}>Previous</Button>
+          <Button onClick={handleNextStep}>Next</Button>
         </div>
       )}
       {currentStep === 3 && (
         <div>
           {/* Step 3 content - View order and checkout */}
           {/* Example content */}
-          <button onClick={handlePrevStep}>Previous</button>
-          <button>Checkout</button>
+          <Button onClick={handlePrevStep}>Previous</Button>
+          <Button>Checkout</Button>
         </div>
       )}
     </div>

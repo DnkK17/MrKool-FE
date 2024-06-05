@@ -17,10 +17,10 @@ const Header = () => {
         </div>
         <Menu mode="horizontal" className="navigation">
           <Menu.Item key="home" style={{color: ' #020286'}} >
-            <Link to="/home">Home</Link>
+            <Link to="/">Home</Link>
           </Menu.Item>
           <Menu.Item key="services"  style={{color: ' #020286'}}>
-            <Link to="/ourservices">Our Services</Link>
+            <Link to="/service">Our Services</Link>
           </Menu.Item>
           <Menu.Item key="contact"  style={{color: ' #020286'}}>
             <Link to="/contact">Contact</Link>
