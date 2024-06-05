@@ -48,10 +48,10 @@ const Sidebar = () => {
           Invoices Balances
         </Menu.Item>
         <Divider style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)' }} />
-        <Menu.Item key="/notifications" icon={<BellOutlined style={{ fontSize: '18px', marginRight: '8px' }} />} style={{ padding: '8px 16px', marginBottom: '8px' }}>
+        <Menu.Item key="/" icon={<BellOutlined style={{ fontSize: '18px', marginRight: '8px' }} />} style={{ padding: '8px 16px', marginBottom: '8px' }}>
           Notifications
         </Menu.Item>
-        <Menu.Item key="/settings" icon={<SettingOutlined style={{ fontSize: '18px', marginRight: '8px' }} />} style={{ padding: '8px 16px', marginBottom: '8px' }}>
+        <Menu.Item key="/" icon={<SettingOutlined style={{ fontSize: '18px', marginRight: '8px' }} />} style={{ padding: '8px 16px', marginBottom: '8px' }}>
           Settings
         </Menu.Item>
         <Divider style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)' }} />

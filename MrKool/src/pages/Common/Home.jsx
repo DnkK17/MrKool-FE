@@ -42,11 +42,22 @@ const priceTableData = [
 const Home = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const data = useSelector(state => state.product);
+  const data = useSelector(state => state.product.data);
+  const loading = useSelector(state => state.product.loading);
+  const error = useSelector(state => state.product.error);
   useEffect(() => {
     dispatch(fetchProduct())
   }, [dispatch])
-  console.log(data);
+  console.log('Data:', data);
+  console.log('Loading:', loading);
+  console.log('Error:', error);
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
   return (
     <div className="home-container">
       {/* Hero Section */}
@@ -69,7 +80,7 @@ const Home = () => {
           </Col>
         </Row>
         <Row gutter={[16, 16]} justify="center">
-          {data.data.filter((service) => service.bestSeller).map((service, index) => (
+          {data.filter((service) => service.bestSeller).map((service, index) => (
             <Col xs={24} sm={12} md={6} key={index} className="service-col">
               <Card
                 className="service-card"
