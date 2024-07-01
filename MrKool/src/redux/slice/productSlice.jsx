@@ -61,11 +61,11 @@ const productSlice = createSlice({
         },
         setPageSize: (state, action) => {
             state.pageSize = action.payload;
-            state.currentPage = 1; // Reset to first page on page size change
+            state.currentPage = 1;
         },
         setFilter: (state, action) => {
             state.filter = action.payload;
-            state.currentPage = 1; // Reset to first page on filter change
+            state.currentPage = 1; 
         },
     },
     extraReducers: (builder) => {

@@ -10,6 +10,7 @@ import Service from "./pages/Manager/Service.jsx"
 import Station from "./pages/Manager/Station.jsx"
 import Invoice from "./pages/Manager/Invoice.jsx"
 import BookingPage from "./pages/Common/Booking/Booking.jsx";
+import ServiceDetail from "./pages/Common/ServiceDetail.jsx";
 
 function App() {
   return (
@@ -26,7 +27,7 @@ function App() {
         <Route path="/" element={<UserLayout />}>
           <Route index element={<Home />} />
           <Route path="/service" element={<OurServices />} />
-          {/* <Route path="/service/:id" element={<ServiceDetail />} /> */}
+          <Route path="/service/:id" element={<ServiceDetail />} />
           <Route path="/booking" element={<BookingPage/>}/>
         </Route>
       </Routes>

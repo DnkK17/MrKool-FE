@@ -63,7 +63,6 @@ const OurServices = () => {
                 5: '€5,00',
                 25: '€25,00',
               }}
-              tooltipVisible
             />
           </div>
         </div>
