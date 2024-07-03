@@ -1,7 +1,6 @@
-// authSlice.jsx
 
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import api from '../../util/api'; // Adjust the path as per your project structure
+import api from '../../util/api'; 
 
 export const loginUser = createAsyncThunk(
     'auth/loginUser',
@@ -20,7 +19,7 @@ export const registerUser = createAsyncThunk(
     async (userData, { rejectWithValue }) => {
         try {
             const response = await api.register(userData);
-            return response.data; // Assuming your API returns data directly
+            return response.data; 
         } catch (error) {
             return rejectWithValue(error.message);
         }

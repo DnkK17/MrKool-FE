@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button, Card, Spin } from 'antd';
-import { fetchProduct } from '../../redux/slice/productSlice'; 
+import { fetchService } from '../../redux/slice/serviceSlice'; 
 import '../../styles/serviceDetail.css';
 
 const ServiceDetail = () => {
@@ -15,7 +15,7 @@ const ServiceDetail = () => {
 
   useEffect(() => {
     if (id) {
-      dispatch(fetchProduct(id));
+      dispatch(fetchService(id));
     }
   }, [dispatch, id]);
 

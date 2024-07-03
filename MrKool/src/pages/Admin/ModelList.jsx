@@ -1,27 +1,23 @@
 import React, { useState } from 'react';
-import { Typography, Table, Tag, Input, Button, Space, Modal, Form, message } from 'antd';
+import { Typography, Table, Input, Button, Space, Modal, Form, message } from 'antd';
 import { SearchOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import '../../styles/dashboard.css';
 
 const { Title } = Typography;
 
-const ManageTeam = () => {
+const ManageModel = () => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
+  const [confirmDeleteVisible, setConfirmDeleteVisible] = useState(false);
   const [formData, setFormData] = useState({});
   const [editingKey, setEditingKey] = useState('');
   const [data, setData] = useState([
-    { id: 9, name: 'Harvey Roxie', age: 65, phone: '(444)555-6239', email: 'harveyroxie@gmail.com', access: 'admin' },
-    { id: 8, name: 'Rossini Frances', age: 36, phone: '(222)444-5555', email: 'rossinifrances@gmail.com', access: 'user' },
-    { id: 7, name: 'Ferrara Clifford', age: 44, phone: '(543)124-0123', email: 'ferraraclifford@gmail.com', access: 'user' },
-    { id: 6, name: 'Ever Melisandre', age: 150, phone: '(232)545-6483', email: 'evermelisandree@gmail.com', access: 'manager' },
-    { id: 5, name: 'Daenerys Targaryen', age: 31, phone: '(421)445-1189', email: 'daenerystargaryen@gmail.com', access: 'user' },
-    { id: 4, name: 'Anya Stark', age: 16, phone: '(921)425-6742', email: 'anyastark@gmail.com', access: 'admin' },
-    { id: 3, name: 'Jaime Lannister', age: 45, phone: '(422)982-6739', email: 'jaimelannister@gmail.com', access: 'user' },
-    { id: 2, name: 'Cersei Lannister', age: 42, phone: '(421)314-2288', email: 'cerseilannister@gmail.com', access: 'manager' },
+    { id: 1, title: 'Model 1', price: 100, image: 'đhsdjsj' },
+    { id: 2, title: 'Model 2', price: 150, image: 'dhdjsdhsja'  },
   ]);
+  const [deleteKey, setDeleteKey] = useState(null);
 
   let searchInput = null;
 
@@ -89,12 +85,14 @@ const ManageTeam = () => {
   const handleEdit = record => {
     setModalVisible(true);
     setFormData(record);
-    setEditingKey(record.key);
+    setEditingKey(record.id);
   };
 
-  const handleDelete = key => {
-    setData(data.filter(item => item.id !== key));
-    message.success('User deleted successfully');
+  const handleDelete = () => {
+    setData(data.filter(item => item.id !== deleteKey));
+    message.success('Model deleted successfully');
+    setConfirmDeleteVisible(false);
+    setDeleteKey(null);
   };
 
   const handleModalOk = () => {
@@ -109,7 +107,7 @@ const ManageTeam = () => {
       newData.push({ id: data.length + 1, ...formData });
     }
     setData(newData);
-    message.success(editingKey ? 'User updated successfully' : 'User added successfully');
+    message.success(editingKey ? 'Model updated successfully' : 'Model added successfully');
     setModalVisible(false);
     setEditingKey('');
   };
@@ -129,34 +127,19 @@ const ManageTeam = () => {
       ...getColumnSearchProps('id'),
     },
     {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
+      title: 'Title',
+      dataIndex: 'title',
+      key: 'title',
     },
     {
-      title: 'Age',
-      dataIndex: 'age',
-      key: 'age',
+      title: 'Description',
+      dataIndex: 'description',
+      key: 'description',
     },
     {
-      title: 'Phone Number',
-      dataIndex: 'phone',
-      key: 'phone',
-    },
-    {
-      title: 'Email',
-      dataIndex: 'email',
-      key: 'email',
-    },
-    {
-      title: 'Access Level',
-      dataIndex: 'access',
-      key: 'access',
-      render: access => (
-        <Tag color={access === 'admin' ? 'geekblue' : access === 'manager' ? 'green' : 'volcano'}>
-          {access}
-        </Tag>
-      ),
+      title: 'Price',
+      dataIndex: 'price',
+      key: 'price',
     },
     {
       title: 'Action',
@@ -171,7 +154,7 @@ const ManageTeam = () => {
         ) : (
           <Space>
             <Button type="primary" icon={<EditOutlined />} size="small" onClick={() => handleEdit(record)}>Edit</Button>
-            <Button type="primary" danger icon={<DeleteOutlined />} size="small" onClick={() => handleDelete(record.id)}>Delete</Button>
+            <Button type="primary" danger icon={<DeleteOutlined />} size="small" onClick={() => { setConfirmDeleteVisible(true); setDeleteKey(record.id); }}>Delete</Button>
           </Space>
         );
       },
@@ -181,12 +164,15 @@ const ManageTeam = () => {
   return (
     <div className='account-container'>
       <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
-        <Title level={4}>Managing the Team Members</Title>
+        <Title level={4}>Managing the Models</Title>
+        <Button type="primary" onClick={() => { setModalVisible(true); setFormData({}); setEditingKey(''); }} style={{ marginBottom: 16 }}>
+          Add Model
+        </Button>
         <Table columns={columns} dataSource={data} pagination={{ pageSize: 100 }} />
       </div>
 
       <Modal
-        title={editingKey ? "Edit User" : "Add User"}
+        title={editingKey ? "Edit Model" : "Add Model"}
         visible={modalVisible}
         onOk={handleModalOk}
         onCancel={handleModalCancel}
@@ -198,49 +184,44 @@ const ManageTeam = () => {
           initialValues={{ remember: true }}
         >
           <Form.Item
-            label="Name"
-            name="name"
-            initialValue={formData.name}
-            rules={[{ required: true, message: 'Please input the name!' }]}
+            label="Title"
+            name="title"
+            initialValue={formData.title}
+            rules={[{ required: true, message: 'Please input the title!' }]}
           >
-            <Input onChange={e => setFormData({ ...formData, name: e.target.value })} />
+            <Input onChange={e => setFormData({ ...formData, title: e.target.value })} value={formData.title} />
           </Form.Item>
           <Form.Item
-            label="Age"
-            name="age"
-            initialValue={formData.age}
-            rules={[{ required: true, message: 'Please input the age!' }]}
+            label="Description"
+            name="description"
+            initialValue={formData.description}
+            rules={[{ required: true, message: 'Please input the description!' }]}
           >
-            <Input type="number" onChange={e => setFormData({ ...formData, age: e.target.value })} />
+            <Input onChange={e => setFormData({ ...formData, description: e.target.value })} value={formData.description} />
           </Form.Item>
           <Form.Item
-            label="Phone Number"
-            name="phone"
-            initialValue={formData.phone}
-            rules={[{ required: true, message: 'Please input the phone number!' }]}
+            label="Price"
+            name="price"
+            initialValue={formData.price}
+            rules={[{ required: true, message: 'Please input the price!' }]}
           >
-            <Input onChange={e => setFormData({ ...formData, phone: e.target.value })} />
-          </Form.Item>
-          <Form.Item
-            label="Email"
-            name="email"
-            initialValue={formData.email}
-            rules={[{ required: true, message: 'Please input the email!' }]}
-          >
-            <Input onChange={e => setFormData({ ...formData, email: e.target.value })} />
-          </Form.Item>
-          <Form.Item
-            label="Access Level"
-            name="access"
-            initialValue={formData.access}
-            rules={[{ required: true, message: 'Please input the access level!' }]}
-          >
-            <Input onChange={e => setFormData({ ...formData, access: e.target.value })} />
+            <Input type="number" onChange={e => setFormData({ ...formData, price: e.target.value })} value={formData.price} />
           </Form.Item>
         </Form>
+      </Modal>
+
+      <Modal
+        title="Confirm Deletion"
+        visible={confirmDeleteVisible}
+        onOk={handleDelete}
+        onCancel={() => setConfirmDeleteVisible(false)}
+        okText="Delete"
+        cancelText="Cancel"
+      >
+        <p>Are you sure you want to delete this Model?</p>
       </Modal>
     </div>
   );
 };
 
-export default ManageTeam;
+export default ManageModel;

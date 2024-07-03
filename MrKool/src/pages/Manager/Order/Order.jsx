@@ -1,12 +1,28 @@
-import React from 'react';
-import { Button, Table } from 'antd';
+import React, { useEffect } from 'react';
+import { Button, Table, Spin, message } from 'antd';
 import { Link } from 'react-router-dom';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { getOrder, deleteOrder, clearError } from '../../redux/slice/orderSlice';
 const ViewOrderPage = () => {
-  const data = [
-    { id: 1, customer: 'John Doe', total: 100 },
-    { id: 2, customer: 'Jane Smith', total: 150 },
-  ];
+  const dispatch = useDispatch();
+  const { data: orders, loading, error } = useSelector(state => state.order);
+
+  useEffect(() => {
+    dispatch(getOrder());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (error) {
+      message.error(error);
+      dispatch(clearError());
+    }
+  }, [error, dispatch]);
+
+  const handleDelete = (id) => {
+    dispatch(deleteOrder(id)).then(() => {
+      dispatch(getOrder());
+    });
+  };
 
   const columns = [
     { title: 'Order ID', dataIndex: 'id', key: 'id' },
@@ -16,17 +32,24 @@ const ViewOrderPage = () => {
       title: 'Action',
       key: 'action',
       render: (_, record) => (
-        <Link to={`/order/${record.id}`}>View Details</Link>
+        <>
+          <Link to={`/order/${record.id}`}>View Details</Link>
+          <Button type="link" onClick={() => handleDelete(record.id)}>Delete</Button>
+        </>
       ),
     },
   ];
+
+  if (loading) {
+    return <Spin size="large" />;
+  }
 
   return (
     <div>
       <Button type="primary" style={{ marginBottom: 16 }}>
         <Link to="/order/new">Add New Order</Link>
       </Button>
-      <Table dataSource={data} columns={columns} />
+      <Table dataSource={orders} columns={columns} rowKey="id" />
     </div>
   );
 };

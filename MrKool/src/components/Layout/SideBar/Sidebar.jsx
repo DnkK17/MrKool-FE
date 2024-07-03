@@ -1,6 +1,6 @@
 import React from 'react';
 import { Layout, Menu, Avatar, Typography, Divider } from 'antd';
-import { UserOutlined, TeamOutlined, MailOutlined, DollarOutlined, SettingOutlined, BellOutlined, LogoutOutlined } from '@ant-design/icons';
+import { TruckOutlined, MailOutlined, DollarOutlined, SettingOutlined, BellOutlined, LogoutOutlined, BuildOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 
 const { Sider } = Layout;
@@ -35,17 +35,17 @@ const Sidebar = () => {
         onClick={handleMenuClick}
         style={{ fontSize: '16px' }}
       >
-        <Menu.Item key="/dashboard" icon={<UserOutlined style={{ fontSize: '18px', marginRight: '8px' }} />} style={{ padding: '8px 16px', marginBottom: '8px' }}>
+        <Menu.Item key="/dashboard" icon={<DollarOutlined style={{ fontSize: '18px', marginRight: '8px' }} />} style={{ padding: '8px 16px', marginBottom: '8px' }}>
           Dashboard
         </Menu.Item>
-        <Menu.Item key="/area" icon={<TeamOutlined style={{ fontSize: '18px', marginRight: '8px' }} />} style={{ padding: '8px 16px', marginBottom: '8px' }}>
-          Manage Areas
+        <Menu.Item key="/serviceList" icon={<TruckOutlined style={{ fontSize: '18px', marginRight: '8px' }} />} style={{ padding: '8px 16px', marginBottom: '8px' }}>
+          Manage Service
         </Menu.Item>
         <Menu.Item key="/account" icon={<MailOutlined style={{ fontSize: '18px', marginRight: '8px' }} />} style={{ padding: '8px 16px', marginBottom: '8px' }}>
           Manage Account
         </Menu.Item>
-        <Menu.Item key="/orders" icon={<DollarOutlined style={{ fontSize: '18px', marginRight: '8px' }} />} style={{ padding: '8px 16px', marginBottom: '8px' }}>
-          Invoices Balances
+        <Menu.Item key="/modelList" icon={<BuildOutlined style={{ fontSize: '18px', marginRight: '8px' }} />} style={{ padding: '8px 16px', marginBottom: '8px' }}>
+          Manage Model
         </Menu.Item>
         <Divider style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)' }} />
         <Menu.Item key="/" icon={<BellOutlined style={{ fontSize: '18px', marginRight: '8px' }} />} style={{ padding: '8px 16px', marginBottom: '8px' }}>

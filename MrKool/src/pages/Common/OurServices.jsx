@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Card, Pagination, Spin, Input, Slider, Button, Row, Col } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { fetchProduct, setCurrentPage, setPageSize, setFilter } from '../../redux/slice/productSlice';
+import { fetchService, setCurrentPage, setPageSize, setFilter } from '../../redux/slice/serviceSlice';
 import "../../styles/service.css";
 
 const { Search } = Input;
@@ -19,7 +19,7 @@ const OurServices = () => {
   const [priceRange, setPriceRange] = useState(null);
 
   useEffect(() => {
-    dispatch(fetchProduct());
+    dispatch(fetchService());
   }, [dispatch, currentPage, pageSize, searchTerm, priceRange]);
 
   const handlePageChange = (page) => {

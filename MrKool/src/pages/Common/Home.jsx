@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Button, Col, Row, Card, Table } from 'antd';
 import "../../styles/home.css";
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchProduct } from '../../redux/slice/productSlice';
+import { fetchService } from '../../redux/slice/serviceSlice';
 import { useNavigate } from 'react-router-dom';
 
 const { Meta } = Card;
@@ -38,19 +38,17 @@ const priceTableData = [
   },
 ];
 
-
 const Home = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const data = useSelector(state => state.product.data);
-  const loading = useSelector(state => state.product.loading);
-  const error = useSelector(state => state.product.error);
+  const data = useSelector(state => state.service.data);
+  const loading = useSelector(state => state.service.loading);
+  const error = useSelector(state => state.service.error);
+
   useEffect(() => {
-    dispatch(fetchProduct())
-  }, [dispatch])
-  console.log('Data:', data);
-  console.log('Loading:', loading);
-  console.log('Error:', error);
+    dispatch(fetchService());
+  }, [dispatch]);
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -58,6 +56,7 @@ const Home = () => {
   if (error) {
     return <div>Error: {error}</div>;
   }
+console.log(data);
   return (
     <div className="home-container">
       {/* Hero Section */}
@@ -80,7 +79,7 @@ const Home = () => {
           </Col>
         </Row>
         <Row gutter={[16, 16]} justify="center">
-          {data.filter((service) => service.bestSeller).map((service, index) => (
+          {data.slice(0, 5).map((service, index) => ( // Hiển thị 5 dịch vụ đầu tiên
             <Col xs={24} sm={12} md={6} key={index} className="service-col">
               <Card
                 className="service-card"
@@ -91,19 +90,19 @@ const Home = () => {
                   <Button key="detail" type="primary" size="small" onClick={() => navigate(`/service/${service.serviceID}`)}>
                     View Detail
                   </Button>
-
                 ]}
               >
-                <Meta title={service.serviceName} description={service.description} style={{ fontSize: '14px' }} />
+                <Meta title={service.title} description={service.description} style={{ fontSize: '14px' }} />
               </Card>
             </Col>
           ))}
-
         </Row>
         <Button key="more" type="link" size="small" onClick={() => navigate('/service')}>
           See More
         </Button>
       </div>
+
+      {/* Price Table Section */}
       <div className="price-table-section">
         <Row justify="center" align="middle">
           <Col xs={24} className="text-center">
