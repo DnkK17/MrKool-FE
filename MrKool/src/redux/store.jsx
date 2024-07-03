@@ -5,6 +5,7 @@ import userSlice from "./slice/userSlice";
 import authSlice from "./slice/authSlice";
 import orderSlice from "./slice/orderSlice";
 import areaSlice from "./slice/areaSlice";
+import modelSlice from "./slice/modelSlice";
 
 export const store = configureStore({
     reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
         auth: authSlice,
         order: orderSlice,
         area: areaSlice,
+        model: modelSlice,
     },
     // middleware: getDefaulMiddleWare => getDefaulMiddleWare().concat(api.middleware),
     devTools: true

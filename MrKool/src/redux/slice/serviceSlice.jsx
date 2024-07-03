@@ -23,20 +23,43 @@ export const fetchService = createAsyncThunk(
         );
       }
 
-      if (filter.priceRange) {
-        data = data.filter(service => {
-          if (filter.priceRange === 'low') return service.price < 100;
-          if (filter.priceRange === 'medium') return service.price >= 100 && service.price < 500;
-          if (filter.priceRange === 'high') return service.price >= 500;
-          return true;
-        });
-      }
-
       const totalPages = Math.ceil(data.length / pageSize);
       const start = (currentPage - 1) * pageSize;
       const paginatedData = data.slice(start, start + pageSize);
 
       return { data: paginatedData, totalPages };
+    } catch (error) {
+      console.error('API Error:', error);
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const fetchServiceById = createAsyncThunk(
+  'service/fetchServiceById',
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await api.getServiceById(id);
+      return response;
+    } catch (error) {
+      console.error('API Error:', error);
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const searchService = createAsyncThunk(
+  'service/searchService',
+  async (keyword, { rejectWithValue }) => {
+    try {
+      const response = await api.searchService(keyword);
+      let data = response.$values; // Trích xuất mảng từ thuộc tính $values
+
+      if (!Array.isArray(data)) {
+        throw new Error('Expected an array from API response');
+      }
+
+      return data;
     } catch (error) {
       console.error('API Error:', error);
       return rejectWithValue(error.message);
@@ -82,6 +105,36 @@ const serviceSlice = createSlice({
         state.totalPages = action.payload.totalPages;
       })
       .addCase(fetchService.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(fetchServiceById.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchServiceById.fulfilled, (state, action) => {
+        state.loading = false;
+        // Check if the service already exists in the array
+        const index = state.data.findIndex(service => service.serviceID === action.payload.serviceID);
+        if (index !== -1) {
+          // Update existing service
+          state.data[index] = action.payload;
+        } else {
+          // Add new service
+          state.data.push(action.payload);
+        }
+      })
+      .addCase(fetchServiceById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(searchService.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(searchService.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = action.payload; // Assume filtered array is returned
+      })
+      .addCase(searchService.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

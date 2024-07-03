@@ -1,9 +1,8 @@
-// ServiceDetail.jsx
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button, Card, Spin } from 'antd';
-import { fetchService } from '../../redux/slice/serviceSlice'; 
+import { fetchServiceById } from '../../redux/slice/serviceSlice';
 import '../../styles/serviceDetail.css';
 
 const ServiceDetail = () => {
@@ -11,11 +10,13 @@ const ServiceDetail = () => {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const { data: service, loading } = useSelector((state) => state.product); 
+  const service = useSelector((state) => state.service.data.find(service => service.serviceID === parseInt(id)));
+  const loading = useSelector((state) => state.service.loading);
+  const error = useSelector((state) => state.service.error);
 
   useEffect(() => {
     if (id) {
-      dispatch(fetchService(id));
+      dispatch(fetchServiceById(id));
     }
   }, [dispatch, id]);
 
@@ -27,18 +28,22 @@ const ServiceDetail = () => {
     return <Spin size="large" className="loading-spinner" />;
   }
 
-  if (!service) {
-    return <div>Service not found</div>;
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  if (!service || !service.serviceID || !service.description) {
+    return <div>Service details not available</div>;
   }
 
   return (
     <div className="service-detail-container">
       <Card
         hoverable
-        cover={<img alt={service.title} src={service.imageUrl} />}
+        cover={<img alt={service.description} src={service.imageUrl} />}
         className="service-card"
       >
-        <h1>{service.serviceName}</h1>
+        <h1>{service.title || 'Untitled'}</h1>
         <p>{service.description}</p>
         <Button type="primary" onClick={handleBooking}>
           Booking Service

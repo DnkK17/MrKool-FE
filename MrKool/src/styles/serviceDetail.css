@@ -1,37 +1,35 @@
-/* serviceDetail.css */
 .service-detail-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f0f2f5;
-  }
-  
-  .service-card {
-    max-width: 600px;
-    width: 100%;
-  }
-  
-  .service-card h1 {
-    font-size: 24px;
-    margin-bottom: 16px;
-  }
-  
-  .service-card p {
-    font-size: 16px;
-    margin-bottom: 24px;
-  }
-  
-  .service-card img {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-  }
-  
-  .loading-spinner {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-  }
-  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.service-card {
+  width: 100%;
+  max-width: 400px;
+}
+
+.service-card .ant-card-cover img {
+  height: 200px;
+  object-fit: cover;
+}
+
+.service-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+.service-description {
+  font-size: 16px;
+  margin-bottom: 16px;
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}

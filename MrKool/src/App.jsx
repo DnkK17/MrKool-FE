@@ -5,7 +5,6 @@ import Dashboard from "./pages/Admin/Dashboard.jsx";
 import Login from "./pages/Common/Login.jsx";
 import AdminLayout from "./pages/AdminLayout.jsx";
 import UserLayout from "./pages/UserLayout.jsx";
-// import ServiceDetail from "./pages/Common/ServiceDetail.jsx";
 // import Service from "./pages/Manager/Service.jsx"
 import Station from "./pages/Manager/Station.jsx"
 import BookingPage from "./pages/Common/Booking/Booking.jsx";

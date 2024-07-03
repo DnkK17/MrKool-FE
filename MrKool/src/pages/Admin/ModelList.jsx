@@ -1,23 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Typography, Table, Input, Button, Space, Modal, Form, message } from 'antd';
 import { SearchOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import '../../styles/dashboard.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchModels, createModel, updateModel, deleteModel } from '../../redux/slice/modelSlice';
 
 const { Title } = Typography;
 
 const ManageModel = () => {
+  const dispatch = useDispatch();
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [confirmDeleteVisible, setConfirmDeleteVisible] = useState(false);
   const [formData, setFormData] = useState({});
   const [editingKey, setEditingKey] = useState('');
-  const [data, setData] = useState([
-    { id: 1, title: 'Model 1', price: 100, image: 'đhsdjsj' },
-    { id: 2, title: 'Model 2', price: 150, image: 'dhdjsdhsja'  },
-  ]);
   const [deleteKey, setDeleteKey] = useState(null);
+
+  const models = useSelector(state => state.model.models);
+  const loading = useSelector(state => state.model.loading);
+  const error = useSelector(state => state.model.error);
+
+  useEffect(() => {
+    dispatch(fetchModels());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (!loading && error) {
+      message.error('Failed to fetch models');
+    }
+  }, [loading, error]);
 
   let searchInput = null;
 
@@ -89,24 +102,18 @@ const ManageModel = () => {
   };
 
   const handleDelete = () => {
-    setData(data.filter(item => item.id !== deleteKey));
+    dispatch(deleteModel(deleteKey));
     message.success('Model deleted successfully');
     setConfirmDeleteVisible(false);
     setDeleteKey(null);
   };
 
   const handleModalOk = () => {
-    const newData = [...data];
     if (editingKey) {
-      const index = newData.findIndex(item => editingKey === item.id);
-      if (index > -1) {
-        newData[index] = formData;
-      }
+      dispatch(updateModel({ id: editingKey, data: formData }));
     } else {
-      setFormData({ id: data.length + 1, ...formData });
-      newData.push({ id: data.length + 1, ...formData });
+      dispatch(createModel(formData));
     }
-    setData(newData);
     message.success(editingKey ? 'Model updated successfully' : 'Model added successfully');
     setModalVisible(false);
     setEditingKey('');
@@ -168,7 +175,7 @@ const ManageModel = () => {
         <Button type="primary" onClick={() => { setModalVisible(true); setFormData({}); setEditingKey(''); }} style={{ marginBottom: 16 }}>
           Add Model
         </Button>
-        <Table columns={columns} dataSource={data} pagination={{ pageSize: 100 }} />
+        <Table columns={columns} dataSource={models} pagination={{ pageSize: 100 }} />
       </div>
 
       <Modal

@@ -3,38 +3,22 @@ import { Button, Col, Row, Card, Table } from 'antd';
 import "../../styles/home.css";
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchService } from '../../redux/slice/serviceSlice';
+import { fetchModels } from '../../redux/slice/modelSlice';
 import { useNavigate } from 'react-router-dom';
 
 const { Meta } = Card;
 
 const priceTableColumns = [
   {
-    title: 'Service',
-    dataIndex: 'service',
-    key: 'service',
+    title: 'Model',
+    dataIndex: 'title',
+    key: 'title',
   },
   {
     title: 'Price',
-    dataIndex: 'price',
+    dataIndex: `price`,
     key: 'price',
-  },
-];
-
-const priceTableData = [
-  {
-    key: '1',
-    service: 'AC Repair',
-    price: '$50 - $150',
-  },
-  {
-    key: '2',
-    service: 'AC Installation',
-    price: '$300 - $700',
-  },
-  {
-    key: '3',
-    service: 'Maintenance',
-    price: '$80 - $120',
+    render: (text) => `$${text}`,
   },
 ];
 
@@ -42,21 +26,29 @@ const Home = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const data = useSelector(state => state.service.data);
-  const loading = useSelector(state => state.service.loading);
-  const error = useSelector(state => state.service.error);
+  const serviceLoading = useSelector(state => state.service.loading);
+  const serviceError = useSelector(state => state.service.error);
+  const models = useSelector(state => state.model.models); // Access models from Redux store
+  const modelLoading = useSelector(state => state.model.loading);
+  const modelError = useSelector(state => state.model.error);
 
   useEffect(() => {
     dispatch(fetchService());
+    dispatch(fetchModels());
   }, [dispatch]);
 
-  if (loading) {
+  useEffect(() => {
+    console.log('Models:', models); 
+  }, [models]); 
+
+  if (serviceLoading || modelLoading) {
     return <div>Loading...</div>;
   }
 
-  if (error) {
-    return <div>Error: {error}</div>;
+  if (serviceError || modelError) {
+    return <div>Error: {serviceError || modelError}</div>;
   }
-console.log(data);
+
   return (
     <div className="home-container">
       {/* Hero Section */}
@@ -79,13 +71,13 @@ console.log(data);
           </Col>
         </Row>
         <Row gutter={[16, 16]} justify="center">
-          {data.slice(0, 5).map((service, index) => ( // Hiển thị 5 dịch vụ đầu tiên
+          {data.slice(0, 5).map((service, index) => (
             <Col xs={24} sm={12} md={6} key={index} className="service-col">
               <Card
                 className="service-card"
                 hoverable
                 style={{ width: '100%' }}
-                cover={<img alt={service.serviceName} src={service.imageUrl} style={{ height: '150px', objectFit: 'cover' }} />}
+                cover={<img alt={service.title} src={service.imageUrl} style={{ height: '150px', objectFit: 'cover' }} />}
                 actions={[
                   <Button key="detail" type="primary" size="small" onClick={() => navigate(`/service/${service.serviceID}`)}>
                     View Detail
@@ -113,9 +105,10 @@ console.log(data);
           <Col xs={24} md={18}>
             <Table
               columns={priceTableColumns}
-              dataSource={priceTableData}
+              dataSource={models}
               pagination={false}
               className="price-table"
+              rowKey="serviceID" // Ensure a unique key for each row
             />
           </Col>
         </Row>
