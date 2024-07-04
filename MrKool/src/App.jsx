@@ -11,6 +11,7 @@ import BookingPage from "./pages/Common/Booking/Booking.jsx";
 import ServiceDetail from "./pages/Common/ServiceDetail.jsx";
 import ServiceList from "./pages/Admin/ServiceList.jsx";
 import ManageModel from "./pages/Admin/ModelList.jsx";
+import TechinicianLayout from "./pages/TechnicianLayout.jsx";
 
 function App() {
   return (
@@ -23,6 +24,9 @@ function App() {
           <Route path='/area' element={<Station />} />
           <Route path='/serviceList' element={<ServiceList/>} />
           <Route path='/modelList' element = {<ManageModel/>}/>
+        </Route>
+        <Route element={<TechinicianLayout />}>
+         
         </Route>
         <Route path="/" element={<UserLayout />}>
           <Route index element={<Home />} />
