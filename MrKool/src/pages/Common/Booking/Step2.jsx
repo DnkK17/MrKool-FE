@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, DatePicker, Input, TimePicker } from 'antd';
+import { DatePicker, Input, TimePicker } from 'antd';
 import PropTypes from 'prop-types';
 
 const { TextArea } = Input;
@@ -9,31 +9,38 @@ const Step2 = ({ onNext }) => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
 
-
+  const handleNext = () => {
+    const data = {
+      address,
+      selectedDate,
+      selectedTime,
+    };
+    onNext(data);
+  };
 
   return (
     <div className="step-container">
-      <h2>Step 2: Fill Address and Choose Date & Time</h2>
-      <div style={{ marginBottom: 20 }}>
+      <h2 style={{ margin: 20 }}>Step 2: Fill Address and Choose Date & Time</h2>
+      <div style={{ margin: 20 }}>
         <label>Address:</label>
         <TextArea
           value={address}
           onChange={(e) => setAddress(e.target.value)}
           rows={4}
           placeholder="Enter your address"
-          style={{ marginBottom: 10 }}
+          style={{ margin: 10 }}
         />
       </div>
-      <div style={{ marginBottom: 20 }}>
-        <label>Date:</label>
+      <div style={{ margin: 20 }}>
+        <label>Working Date:</label>
         <DatePicker
           value={selectedDate}
           onChange={(date) => setSelectedDate(date)}
           style={{ marginRight: 10 }}
         />
       </div>
-      <div style={{ marginBottom: 20 }}>
-        <label>Time:</label>
+      <div style={{ margin: 20 }}>
+        <label>Working Time:</label>
         <TimePicker
           value={selectedTime}
           onChange={(time) => setSelectedTime(time)}
@@ -41,7 +48,6 @@ const Step2 = ({ onNext }) => {
           style={{ marginRight: 10 }}
         />
       </div>
-     
     </div>
   );
 };
