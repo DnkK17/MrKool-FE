@@ -98,10 +98,11 @@ const ManageModel = () => {
   const handleEdit = record => {
     setModalVisible(true);
     setFormData(record);
-    setEditingKey(record.id);
+    setEditingKey(record.conditionerModelID);
   };
 
   const handleDelete = () => {
+    console.log('Deleting model with ID:', deleteKey);  // Log for debugging
     dispatch(deleteModel(deleteKey));
     message.success('Model deleted successfully');
     setConfirmDeleteVisible(false);
@@ -124,14 +125,14 @@ const ManageModel = () => {
     setEditingKey('');
   };
 
-  const isEditing = record => record.id === editingKey;
+  const isEditing = record => record.conditionerModelID === editingKey;
 
   const columns = [
     {
       title: 'ID',
-      dataIndex: 'id',
-      key: 'id',
-      ...getColumnSearchProps('id'),
+      dataIndex: 'conditionerModelID',
+      key: 'conditionerModelID',
+      ...getColumnSearchProps('conditionerModelID'),
     },
     {
       title: 'Title',
@@ -161,7 +162,7 @@ const ManageModel = () => {
         ) : (
           <Space>
             <Button type="primary" icon={<EditOutlined />} size="small" onClick={() => handleEdit(record)}>Edit</Button>
-            <Button type="primary" danger icon={<DeleteOutlined />} size="small" onClick={() => { setConfirmDeleteVisible(true); setDeleteKey(record.id); }}>Delete</Button>
+            <Button type="primary" danger icon={<DeleteOutlined />} size="small" onClick={() => { setConfirmDeleteVisible(true); setDeleteKey(record.conditionerModelID); }}>Delete</Button>
           </Space>
         );
       },

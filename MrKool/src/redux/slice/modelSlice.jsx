@@ -7,7 +7,7 @@ export const fetchModels = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await api.getModel();
-      return response.$values; 
+      return response.$values;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -67,7 +67,7 @@ export const deleteModel = createAsyncThunk(
   async (id, { rejectWithValue }) => {
     try {
       const response = await api.deleteModel(id);
-      return response;
+      return response
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -137,8 +137,7 @@ const modelSlice = createSlice({
         state.loading = true;
       })
       .addCase(updateModel.fulfilled, (state, action) => {
-        state.loading = false;
-        const index = state.models.findIndex(model => model.id === action.payload.id);
+        const index = state.models.findIndex(model => model.conditionerModelID === action.payload.conditionerModelID);
         if (index !== -1) {
           state.models[index] = action.payload;
         }
@@ -152,7 +151,7 @@ const modelSlice = createSlice({
       })
       .addCase(deleteModel.fulfilled, (state, action) => {
         state.loading = false;
-        state.models = state.models.filter(model => model.id !== action.payload.id);
+        state.models = state.models.filter(model => model.id !== action.payload);
       })
       .addCase(deleteModel.rejected, (state, action) => {
         state.loading = false;

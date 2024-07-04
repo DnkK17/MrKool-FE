@@ -123,7 +123,8 @@ const api = {
         return axiosClient.post(url, params);
     },
     deleteModel: (id) => {
-        const url = `Model/DeleteModel/${id}`;
+        const url = `Model/${id}`;
+        console.log('API deleteModel called with ID:', id);
         return axiosClient.delete(url);
     },
     //ORDER
