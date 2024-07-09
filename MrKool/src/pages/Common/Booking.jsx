@@ -4,10 +4,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchModels } from '../../redux/slice/modelSlice';
 import { fetchStations } from '../../redux/slice/stationSlice';
 import '../../styles/booking.css';
+import { useNavigate } from 'react-router-dom';
 const { Option } = Select;
 
 const BookingPage = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const models = useSelector(state => state.model.models);
   const loadingModels = useSelector(state => state.model.loading);
   const errorModels = useSelector(state => state.model.error);
@@ -27,40 +29,50 @@ const BookingPage = () => {
       setSelectedModels([...selectedModels, selected]);
     }
   };
+
   const handleRemoveModel = (index) => {
     const updatedModels = [...selectedModels];
     updatedModels.splice(index, 1);
     setSelectedModels(updatedModels);
   };
+
   const onFinish = (values) => {
-    console.log('Form values:', values);
-    message.success('Booking submitted successfully');
+    console.log('Thông tin biểu mẫu:', values);
+    message.success('Đặt lịch thành công');
     form.resetFields();
-    setSelectedModels([]);
+
+    const formattedValues = {
+      ...values,
+      date: values.date ? values.date.format('YYYY-MM-DD') : null,
+      time: values.time ? values.time.format('HH:mm') : null,
+      selectedModels: selectedModels
+    };
+
+    navigate('/checkout', { state: formattedValues });
   };
 
   useEffect(() => {
     if (!loadingModels && errorModels) {
-      message.error('Failed to fetch models');
+      message.error('Không thể lấy danh sách các loại máy lạnh');
     }
   }, [loadingModels, errorModels]);
 
   return (
     <div className="booking-page">
-      <h2 className='title'>Booking Form</h2>
+      <h2 className='title'>Biểu mẫu Đặt lịch</h2>
       <Form
         form={form}
         layout="vertical"
         onFinish={onFinish}
       >
         <Form.Item
-          label="Choose Type of Air Conditioner"
+          label="Chọn loại máy lạnh"
           name="modelType"
-          rules={[{ required: true, message: 'Please select a model' }]}
+          rules={[{ required: true, message: 'Vui lòng chọn loại máy lạnh' }]}
         >
           <Select
             showSearch
-            placeholder="Select type"
+            placeholder="Chọn loại"
             loading={loadingModels}
             optionFilterProp="children"
             onChange={handleSelectModel}
@@ -88,53 +100,68 @@ const BookingPage = () => {
             type="link"
             onClick={() => form.setFieldsValue({ modelType: null })}
           >
-            + Add Another
+            + Thêm loại khác
           </Button>
         </div>
 
         {selectedModels.map((selectedModel, index) => (
           <Form.Item
             key={index}
-            label={`Type of Air Conditioner ${index + 1}`}
+            label={`Loại máy lạnh ${index + 1}`}
             name={`modelType-${index}`}
           >
             <Input disabled value={selectedModel.title} />
             <Button type="link" onClick={() => handleRemoveModel(index)}>
-              Remove
+              Xóa
             </Button>
           </Form.Item>
         ))}
 
         <Form.Item
-          label="Address"
+          label="Địa chỉ"
           name="address"
-          rules={[{ required: true, message: 'Please enter your address' }]}
+          rules={[{ required: true, message: 'Vui lòng nhập địa chỉ của bạn' }]}
         >
-          <Input placeholder="Enter your address" />
+          <Input placeholder="Nhập địa chỉ của bạn" />
+        </Form.Item>
+        <Form.Item
+          label="Số điện thoại"
+          name="phone"
+          rules={[{ required: true, message: 'Vui lòng nhập số điện thoại của bạn' }]}
+        >
+          <Input placeholder="Nhập số điện thoại của bạn" />
         </Form.Item>
 
         <Form.Item
-          label="Date"
+          label="Họ và tên"
+          name="fullName"
+          rules={[{ required: true, message: 'Vui lòng nhập họ và tên của bạn' }]}
+        >
+          <Input placeholder="Nhập họ và tên của bạn" />
+        </Form.Item>
+
+        <Form.Item
+          label="Ngày"
           name="date"
-          rules={[{ required: true, message: 'Please select a date' }]}
+          rules={[{ required: true, message: 'Vui lòng chọn ngày' }]}
         >
           <DatePicker />
         </Form.Item>
 
         <Form.Item
-          label="Time"
+          label="Thời gian"
           name="time"
-          rules={[{ required: true, message: 'Please select a time' }]}
+          rules={[{ required: true, message: 'Vui lòng chọn thời gian' }]}
         >
           <TimePicker format="HH:mm" />
         </Form.Item>
 
         <Form.Item
-          label="Service Station"
+          label="Trạm dịch vụ"
           name="station"
-          rules={[{ required: true, message: 'Please select a service station' }]}
+          rules={[{ required: true, message: 'Vui lòng chọn trạm dịch vụ' }]}
         >
-          <Select placeholder="Select service station">
+          <Select placeholder="Chọn trạm dịch vụ">
             {stations && stations.map(station => (
               <Option key={station.stationID} value={station.stationID}>
                 {station.address}
@@ -143,25 +170,10 @@ const BookingPage = () => {
           </Select>
         </Form.Item>
 
-        <Form.Item
-          label="Phone Number"
-          name="phone"
-          rules={[{ required: true, message: 'Please enter your phone number' }]}
-        >
-          <Input placeholder="Enter your phone number" />
-        </Form.Item>
-
-        <Form.Item
-          label="Full Name"
-          name="fullName"
-          rules={[{ required: true, message: 'Please enter your full name' }]}
-        >
-          <Input placeholder="Enter your full name" />
-        </Form.Item>
 
         <Form.Item style={{ textAlign: 'center' }}>
           <Button type="primary" htmlType="submit">
-            Book Now
+            Đặt lịch ngay
           </Button>
         </Form.Item>
       </Form>

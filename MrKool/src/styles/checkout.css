@@ -1,0 +1,22 @@
+.checkout-page {
+    padding: 24px;
+    background-color: #f0f2f5;
+  }
+  
+  .ant-card {
+    margin-bottom: 24px;
+  }
+  
+  .ant-descriptions {
+    background-color: #fff;
+    padding: 16px;
+  }
+  
+  .ant-list-item-meta-description img {
+    border-radius: 4px;
+  }
+  
+  .title {
+    text-align: center;
+    font-weight: 600;
+  }

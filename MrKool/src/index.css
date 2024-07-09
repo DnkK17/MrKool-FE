@@ -1,8 +1,7 @@
 /* google fonts */
 
-@import url("https://fonts.googleapis.com/css2?family=RocknRoll+One&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Istok+Web&display=swap");
-
+@import url('https://fonts.gstatic.com/s/arialnova/v2/w8jbW7Css5ICemMExb3y5d4Lw8D.woff2');
+@import url('https://fonts.googleapis.com/css2?family=Times+New+Roman+Vietnamese&display=swap');
 /* reset default style */
 
 * {
@@ -15,7 +14,7 @@
 
 body {
   background: #fcfcfc;
-  font-family: "Istok Web", sans-serif;
+  font-family: "Arial Vietnamese", sans-serif;
 }
 
 h1,
@@ -24,7 +23,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: "RocknRoll One", sans-serif !important;
+  font-family: "Times New Roman Vietnamese", sans-serif !important;
 }
 
 a {

@@ -13,7 +13,6 @@ export const store = configureStore({
     reducer: {
         service: serviceSlice,
         user: userSlice,
-        // [api.reducerPath]: api.reducer,
         auth: authSlice,
         order: orderSlice,
         area: areaSlice,

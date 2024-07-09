@@ -17,13 +17,13 @@ const Header = () => {
         </div>
         <Menu mode="horizontal" className="navigation">
           <Menu.Item key="home" style={{color: ' #020286'}} >
-            <Link to="/">Home</Link>
+            <Link to="/">Trang chủ</Link>
           </Menu.Item>
           <Menu.Item key="services"  style={{color: ' #020286'}}>
-            <Link to="/service">Our Services</Link>
+            <Link to="/service">Các dịch vụ</Link>
           </Menu.Item>
           <Menu.Item key="contact"  style={{color: ' #020286'}}>
-            <Link to="/contact">Contact</Link>
+            <Link to="/contact">Liên hệ</Link>
           </Menu.Item>
         </Menu>
         <div className="nav_right">

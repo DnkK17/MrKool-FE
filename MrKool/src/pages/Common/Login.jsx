@@ -1,4 +1,3 @@
-// Login.js
 import React, { useState } from 'react';
 import { Form, Input, Button, message } from 'antd';
 import { GooglePlusOutlined, FacebookOutlined, GithubOutlined, LinkedinOutlined } from '@ant-design/icons';
@@ -17,26 +16,43 @@ const Login = () => {
     const onFinish = async (values) => {
         dispatch(clearError());
         try {
-            const { user, token } = await dispatch(loginUser(values));
-            if (user) {
-                message.success(`Login successful. Welcome, ${user.name}!`);
-                localStorage.setItem('user', JSON.stringify(user));
-                if (user.roleName === 'Customer') {
-                    navigate('/dashboard');
+            if (isSignUp) {
+                const resultAction = await dispatch(registerUser(values));
+                if (registerUser.fulfilled.match(resultAction)) {
+                    const { user, token } = resultAction.payload;
+                    message.success(`Đăng ký thành công. Chào bạn, ${user.name}!`);
+                    localStorage.setItem('user', JSON.stringify(user));
+                    if (user.roleName === 'Customer') {
+                        navigate('/dashboard');
+                    } else {
+                        navigate('/home');
+                    }
                 } else {
-                    navigate('/home');
+                    message.error(resultAction.payload || 'Đã xảy ra lỗi. Vui lòng thử lại sau.');
                 }
             } else {
-                message.error('Invalid email or password.');
+                const resultAction = await dispatch(loginUser(values));
+                if (loginUser.fulfilled.match(resultAction)) {
+                    const { user, token } = resultAction.payload;
+                    message.success(`Đăng nhập thành công. Chào bạn, ${user.name}!`);
+                    localStorage.setItem('user', JSON.stringify(user));
+                    if (user.roleName === 'Customer') {
+                        navigate('/dashboard');
+                    } else {
+                        navigate('/home');
+                    }
+                } else {
+                    message.error(resultAction.payload || 'Email hoặc Mật khẩu không hợp lệ');
+                }
             }
         } catch (error) {
-            console.error('Error logging in:', error);
-            message.error('An error occurred. Please try again later.');
+            console.error('Lỗi khi đăng nhập:', error);
+            message.error('Đã xảy ra lỗi. Vui lòng thử lại sau.');
         }
     };
 
     const onFinishFailed = (errorInfo) => {
-        console.log('Failed:', errorInfo);
+        console.log('Thất bại:', errorInfo);
     };
 
     return (
@@ -45,43 +61,43 @@ const Login = () => {
                 <div className={`form-container ${isSignUp ? 'sign-up' : 'sign-in'}`}>
                     <Form
                         form={form}
-                        name={isSignUp ? 'signUp' : 'signIn'}
+                        name={isSignUp ? 'Đăng ký' : 'Đăng nhập'}
                         initialValues={{ remember: true }}
                         onFinish={onFinish}
                         onFinishFailed={onFinishFailed}
                     >
-                        <h1>{isSignUp ? 'Create Account' : 'Sign In'}</h1>
+                        <h1>{isSignUp ? 'Đăng ký' : 'Đăng nhập'}</h1>
                         <div className="social-icons">
                             <a href="#" className="icon"><GooglePlusOutlined /></a>
                             <a href="#" className="icon"><FacebookOutlined /></a>
                             <a href="#" className="icon"><GithubOutlined /></a>
                             <a href="#" className="icon"><LinkedinOutlined /></a>
                         </div>
-                        <span>{isSignUp ? 'or use your email for registration' : 'or use your email for login'}</span>
+                        <span>{isSignUp ? 'hoặc sử dụng email của bạn để đăng ký' : 'hoặc sử dụng email của bạn để đăng nhập'}</span>
                         {isSignUp && (
                             <Form.Item
                                 name="name"
-                                rules={[{ required: true, message: 'Please input your name!' }]}
+                                rules={[{ required: true, message: 'Vui lòng nhập tên của bạn!' }]}
                             >
-                                <Input placeholder="Name" />
+                                <Input placeholder="Tên" />
                             </Form.Item>
                         )}
                         <Form.Item
                             name="email"
-                            rules={[{ required: true, message: 'Please input your email!' }]}
+                            rules={[{ required: true, message: 'Vui lòng nhập email của bạn!' }]}
                         >
                             <Input placeholder="Email" />
                         </Form.Item>
                         <Form.Item
                             name="password"
-                            rules={[{ required: true, message: 'Please input your password!' }]}
+                            rules={[{ required: true, message: 'Vui lòng nhập mật khẩu của bạn!' }]}
                         >
-                            <Input.Password placeholder="Password" />
+                            <Input.Password placeholder="Mật khẩu" />
                         </Form.Item>
-                        {!isSignUp && <a href="#">Forget Your Password?</a>}
+                        {!isSignUp && <a href="#">Quên mật khẩu?</a>}
                         <Form.Item>
                             <Button type="primary" htmlType="submit">
-                                {isSignUp ? 'Sign Up' : 'Sign In'}
+                                {isSignUp ? 'Đăng ký' : 'Đăng nhập'}
                             </Button>
                         </Form.Item>
                     </Form>
@@ -89,17 +105,17 @@ const Login = () => {
                 <div className="toggle-container">
                     <div className="toggle">
                         <div className="toggle-panel toggle-left">
-                            <h1>Welcome Back!</h1>
-                            <p>Enter your personal details to use all of the site features</p>
+                            <h1>Chào mừng trở lại!</h1>
+                            <p>Nhập thông tin cá nhân của bạn để sử dụng các tính năng của trang web</p>
                             <Button className="hidden" id="login" onClick={() => setIsSignUp(false)}>
-                                Sign In
+                                Đăng nhập
                             </Button>
                         </div>
                         <div className="toggle-panel toggle-right">
-                            <h1>Hello, Friend!</h1>
-                            <p>Register with your personal details to use all of the site features</p>
+                            <h1>Xin chào, bạn thân mến!</h1>
+                            <p>Hãy đăng ký với thông tin cá nhân của bạn để sử dụng các tính năng của trang web</p>
                             <Button className="hidden" id="register" onClick={() => setIsSignUp(true)}>
-                                Sign Up
+                                Đăng ký
                             </Button>
                         </div>
                     </div>

@@ -55,10 +55,10 @@ const Home = () => {
       <div className="hero-section">
         <Row align="middle" className="hero-content">
           <Col xs={24} md={12}>
-            <h1 className="hero-title">Expert Air Conditioner Repair & Maintenance</h1>
-            <p className="hero-subtitle">Fast, Reliable, and Affordable Services</p>
-            <Button type="primary" size="large" className="hero-btn">Schedule Your Service Today</Button>
-            <Button type="default" size="large" className="hero-btn">Get a Free Quote</Button>
+            <h1 className="hero-title">Dịch Vụ Sửa Chữa và Bảo Trì Máy Lạnh Chuyên Nghiệp</h1>
+            <p className="hero-subtitle">Nhanh chóng, Đáng tin cậy và Chi phí Hợp lý</p>
+            <Button type="primary" size="large" className="hero-btn">Đặt Lịch Dịch Vụ Ngay Hôm Nay</Button>
+            <Button type="default" size="large" className="hero-btn">Nhận Báo Giá Miễn Phí</Button>
           </Col>
         </Row>
       </div>
@@ -67,7 +67,7 @@ const Home = () => {
       <div className="services-section">
         <Row justify="center" align="middle">
           <Col xs={24} className="text-center">
-            <h2 className="section-title">Our Services</h2>
+            <h2 className="section-title">Các loại dịch vụ</h2>
           </Col>
         </Row>
         <Row gutter={[16, 16]} justify="center">
@@ -80,7 +80,7 @@ const Home = () => {
                 cover={<img alt={service.title} src={service.imageUrl} style={{ height: '150px', objectFit: 'cover' }} />}
                 actions={[
                   <Button key="detail" type="primary" size="small" onClick={() => navigate(`/service/${service.serviceID}`)}>
-                    View Detail
+                    Xem chi tiết
                   </Button>
                 ]}
               >
@@ -93,12 +93,10 @@ const Home = () => {
           See More
         </Button>
       </div>
-
-      {/* Price Table Section */}
       <div className="price-table-section">
         <Row justify="center" align="middle">
           <Col xs={24} className="text-center">
-            <h2 className="section-title">Price Table</h2>
+            <h2 className="section-title">Bảng giá</h2>
           </Col>
         </Row>
         <Row justify="center">
@@ -108,7 +106,7 @@ const Home = () => {
               dataSource={models}
               pagination={false}
               className="price-table"
-              rowKey="serviceID" // Ensure a unique key for each row
+              rowKey="serviceID" 
             />
           </Col>
         </Row>
