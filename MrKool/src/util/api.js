@@ -249,6 +249,23 @@ const api = {
         const url = `Techinician/DeleteTechinician/${id}`;
         return axiosClient.delete(url);
     },
+    //TRANSACTION
+    getTransaction: (id) => {
+        const url = `Transaction/${id}`;
+        return axiosClient.get(url);
+    },
+    getTransactionByDate: (getByDate) => {
+        const url = `Transaction/${getByDate}`;
+        return axiosClient.get(url);
+    },
+    //PAYMENT
+    createPayment: (params) => {
+        const url = "Payment/create-payment";
+        return axiosClient.post(url, params);
+    },
+    getPayment: () => {
+        
+    }
 }
 
 export default api;

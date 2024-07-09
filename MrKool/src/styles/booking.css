@@ -1,20 +1,12 @@
 .booking-page {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .button-container {
-    display: flex;
-    justify-content: center;
-    margin: 20px;
-    
-  }
-  
-  .booking-page > div {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
+  max-width: 600px; /* Giới hạn chiều rộng của form */
+  margin: 20px auto; /* Canh giữa form theo chiều ngang */
+  padding: 20px; /* Khoảng cách giữa nội dung và viền */
+  border: 1px solid #ddd; /* Viền đường kẻ */
+  border-radius: 8px; /* Bo tròn các góc */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Đổ bóng cho khung */
+  background-color: #fff; /* Màu nền của form */
+}
+.title {
+  align-items: center;
+}

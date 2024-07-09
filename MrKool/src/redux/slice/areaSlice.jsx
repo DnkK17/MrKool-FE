@@ -1,21 +1,17 @@
 // areaSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axiosClient from '../../util/api';
+import api from '../../util/api';
 
 export const getAreas = createAsyncThunk('area/getAreas', async () => {
-    const response = await axiosClient.get('Area/Areas');
+    const response = await api.getArea();
     return response.data;
 });
 
 export const getAreaById = createAsyncThunk('area/getAreaById', async (id) => {
-    const response = await axiosClient.get(`Area/${id}`);
+    const response = await api.getAreaById;
     return response.data;
 });
 
-export const getStationsByArea = createAsyncThunk('area/getStationsByArea', async (areaId) => {
-    const response = await axiosClient.get(`Area/${areaId}/Stations`);
-    return response.data;
-});
 
 const areaSlice = createSlice({
     name: 'area',
@@ -55,17 +51,7 @@ const areaSlice = createSlice({
                 state.loading = false;
                 state.error = action.error.message;
             })
-            .addCase(getStationsByArea.pending, (state) => {
-                state.loading = true;
-            })
-            .addCase(getStationsByArea.fulfilled, (state, action) => {
-                state.loading = false;
-                state.stations = action.payload;
-            })
-            .addCase(getStationsByArea.rejected, (state, action) => {
-                state.loading = false;
-                state.error = action.error.message;
-            });
+           
     },
 });
 

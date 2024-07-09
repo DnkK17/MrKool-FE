@@ -47,6 +47,9 @@ const Sidebar = () => {
         <Menu.Item key="/modelList" icon={<BuildOutlined style={{ fontSize: '18px', marginRight: '8px' }} />} style={{ padding: '8px 16px', marginBottom: '8px' }}>
           Manage Model
         </Menu.Item>
+        <Menu.Item key="/area" icon={<BuildOutlined style={{ fontSize: '18px', marginRight: '8px' }} />} style={{ padding: '8px 16px', marginBottom: '8px' }}>
+          Manage Area
+        </Menu.Item>
         <Divider style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)' }} />
         <Menu.Item key="/" icon={<BellOutlined style={{ fontSize: '18px', marginRight: '8px' }} />} style={{ padding: '8px 16px', marginBottom: '8px' }}>
           Notifications

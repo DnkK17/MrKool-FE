@@ -7,12 +7,12 @@ import AdminLayout from "./pages/AdminLayout.jsx";
 import UserLayout from "./pages/UserLayout.jsx";
 // import Service from "./pages/Manager/Service.jsx"
 import Station from "./pages/Manager/Station.jsx"
-import BookingPage from "./pages/Common/Booking/Booking.jsx";
+import BookingPage from "./pages/Common/Booking.jsx";
 import ServiceDetail from "./pages/Common/ServiceDetail.jsx";
 import ServiceList from "./pages/Admin/ServiceList.jsx";
 import ManageModel from "./pages/Admin/ModelList.jsx";
 import TechinicianLayout from "./pages/TechnicianLayout.jsx";
-
+import Area from "./pages/Admin/Area.jsx";
 function App() {
   return (
     <div className="App">
@@ -21,9 +21,10 @@ function App() {
         <Route element={<AdminLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
           {/* <Route path='/account' element={<Service />} /> */}
-          <Route path='/area' element={<Station />} />
+          <Route path='/station' element={<Station />} />
           <Route path='/serviceList' element={<ServiceList/>} />
           <Route path='/modelList' element = {<ManageModel/>}/>
+          <Route path='/area' element={<Area/>}/>
         </Route>
         <Route element={<TechinicianLayout />}>
          
