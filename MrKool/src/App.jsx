@@ -14,6 +14,7 @@ import ManageModel from "./pages/Admin/ModelList.jsx";
 import TechinicianLayout from "./pages/TechnicianLayout.jsx";
 import Area from "./pages/Admin/Area.jsx";
 import CheckoutPage from "./pages/Common/Checkout.jsx";
+import ManagerLayout from "./pages/ManagerLayout.jsx";
 function App() {
   return (
     <div className="App">
@@ -29,6 +30,9 @@ function App() {
         </Route>
         <Route element={<TechinicianLayout />}>
 
+        </Route>
+        <Route element={<ManagerLayout />}>
+        
         </Route>
         <Route path="/" element={<UserLayout />}>
           <Route index element={<Home />} />

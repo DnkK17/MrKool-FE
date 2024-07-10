@@ -1,6 +1,6 @@
 .footer {
   user-select: none;
-  padding: 50px 0px;
+  padding: 30px 0 0 30px;
   background-color: #ffffff;
 }
 
@@ -49,4 +49,11 @@
   color: #020286;
   font-weight: 800;
   font-size: 0.8rem;
+}
+.footer_content {
+  color: #020286;
+  
+}
+.content2{
+  margin-top: 40px
 }
