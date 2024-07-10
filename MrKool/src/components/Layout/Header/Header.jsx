@@ -1,12 +1,33 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Menu, Button, Badge } from 'antd';
-import { ShoppingCartOutlined, UserOutlined, MenuOutlined } from '@ant-design/icons';
+import { Link, useNavigate } from 'react-router-dom';
+import { Menu, Button, Dropdown } from 'antd';
+import { ShoppingCartOutlined, UserOutlined, MenuOutlined, DownOutlined } from '@ant-design/icons';
 import Logo from '../../../assets/images/Logo2.png';
 import '../../../styles/header.css';
-
+import { useSelector} from 'react-redux';
 
 const Header = () => {
+  const navigate = useNavigate();
+  const auth = useSelector(state => state.auth);
+
+  const handleLogout = () => {
+    navigate("/");
+  };
+
+  const menu = (
+    <Menu>
+      <Menu.Item key="1">
+        <Link to="/profile">Hồ sơ</Link>
+      </Menu.Item>
+      <Menu.Item key="2" onClick={handleLogout}>
+        Đăng xuất
+      </Menu.Item>
+      <Menu.Item key="2" onClick={handleLogout}>
+        Dịch vụ đã đặt
+      </Menu.Item>
+    </Menu>
+  );
+
   return (
     <header className="header">
       <div className="nav_wrapper">
@@ -16,13 +37,13 @@ const Header = () => {
           </Link>
         </div>
         <Menu mode="horizontal" className="navigation">
-          <Menu.Item key="home" style={{color: ' #020286'}} >
+          <Menu.Item key="home" style={{ color: '#020286' }}>
             <Link to="/">Trang chủ</Link>
           </Menu.Item>
-          <Menu.Item key="services"  style={{color: ' #020286'}}>
+          <Menu.Item key="services" style={{ color: '#020286' }}>
             <Link to="/service">Các dịch vụ</Link>
           </Menu.Item>
-          <Menu.Item key="contact"  style={{color: ' #020286'}}>
+          <Menu.Item key="contact" style={{ color: '#020286' }}>
             <Link to="/contact">Liên hệ</Link>
           </Menu.Item>
         </Menu>
@@ -34,12 +55,19 @@ const Header = () => {
               </Link>
             </Button>
           </Badge> */}
-          <Button type="link" size="large" className="user">
-            <Link to="/login">
-              <UserOutlined />
-            </Link>
-          </Button>
-  
+          {auth.user ? (
+            <Dropdown overlay={menu} trigger={['click']}>
+              <Button type="link" size="large" className="user">
+                {auth.user.name} <DownOutlined />
+              </Button>
+            </Dropdown>
+          ) : (
+            <Button type="link" size="large" className="user">
+              <Link to="/login">
+                <UserOutlined />
+              </Link>
+            </Button>
+          )}
         </div>
       </div>
     </header>

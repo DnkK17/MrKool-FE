@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Card, List, Descriptions, Row, Col, Radio, Button } from 'antd';
 import "../../styles/checkout.css"
@@ -8,12 +8,16 @@ const CheckoutPage = () => {
   const navigate = useNavigate();
 
   const handlePayment = () => {
-    // Add your payment handling logic here
     console.log('Processing payment...');
   };
   const handleBack = () => {
     navigate('/booking', { state: bookingData });
   };
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
+  };
+
+
   return (
     <div className="checkout-page">
       <h2 className='title'>Xác nhận thanh toán</h2>
@@ -51,6 +55,9 @@ const CheckoutPage = () => {
                 <Radio.Group>
                   <Radio value="vnpay">VNPAY</Radio>
                 </Radio.Group>
+              </Descriptions.Item>
+              <Descriptions.Item label="Tổng giá">
+              {formatPrice(bookingData.totalPrice)}
               </Descriptions.Item>
             </Descriptions>
             <div style={{ textAlign: 'center', marginTop: '16px'}}>

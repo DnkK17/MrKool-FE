@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { Form, Input, Select, DatePicker, TimePicker, Button, message } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchModels } from '../../redux/slice/modelSlice';
@@ -36,6 +36,10 @@ const BookingPage = () => {
     setSelectedModels(updatedModels);
   };
 
+  const totalPrice = useMemo(() => {
+    return selectedModels.reduce((sum, model) => sum + model.price, 0);
+  }, [selectedModels]);
+
   const onFinish = (values) => {
     console.log('Thông tin biểu mẫu:', values);
     message.success('Đặt lịch thành công');
@@ -45,10 +49,15 @@ const BookingPage = () => {
       ...values,
       date: values.date ? values.date.format('YYYY-MM-DD') : null,
       time: values.time ? values.time.format('HH:mm') : null,
-      selectedModels: selectedModels
+      selectedModels: selectedModels,
+      totalPrice: totalPrice
     };
 
     navigate('/checkout', { state: formattedValues });
+  };
+
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
   };
 
   useEffect(() => {
@@ -59,7 +68,7 @@ const BookingPage = () => {
 
   return (
     <div className="booking-page">
-      <h2 className='title'>Biểu mẫu Đặt lịch</h2>
+      <h2 className='title'> Đặt dịch vụ</h2>
       <Form
         form={form}
         layout="vertical"
@@ -88,7 +97,7 @@ const BookingPage = () => {
                     alt={model.title}
                     style={{ width: '20px', marginRight: '5px' }}
                   />
-                  {model.title}
+                  {model.title} - {formatPrice(model.price)}
                 </div>
               </Option>
             ))}
@@ -110,7 +119,7 @@ const BookingPage = () => {
             label={`Loại máy lạnh ${index + 1}`}
             name={`modelType-${index}`}
           >
-            <Input disabled value={selectedModel.title} />
+            <Input disabled value={`${selectedModel.title} - ${selectedModel.price} VND`} />
             <Button type="link" onClick={() => handleRemoveModel(index)}>
               Xóa
             </Button>
@@ -170,6 +179,11 @@ const BookingPage = () => {
           </Select>
         </Form.Item>
 
+        <Form.Item
+          label="Tổng giá"
+        >
+          <Input disabled value={formatPrice(totalPrice)} />
+        </Form.Item>
 
         <Form.Item style={{ textAlign: 'center' }}>
           <Button type="primary" htmlType="submit">
