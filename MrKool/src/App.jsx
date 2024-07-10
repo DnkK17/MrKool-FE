@@ -26,7 +26,7 @@ function App() {
           <Route path='/station' element={<Station />} />
           <Route path='/serviceList' element={<ServiceList />} />
           <Route path='/modelList' element={<ManageModel />} />
-          <Route path='/area' element={<Area />} />
+          <Route path='/area' element={<Area/>} />
         </Route>
         <Route element={<TechinicianLayout />}>
 

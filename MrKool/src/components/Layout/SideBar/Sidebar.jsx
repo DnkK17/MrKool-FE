@@ -1,6 +1,6 @@
 import React from 'react';
 import { Layout, Menu, Avatar, Typography, Divider } from 'antd';
-import { TruckOutlined, MailOutlined, DollarOutlined, SettingOutlined, BellOutlined, LogoutOutlined, BuildOutlined } from '@ant-design/icons';
+import { TruckOutlined, MailOutlined, DollarOutlined, SettingOutlined, BellOutlined, LogoutOutlined, BuildOutlined,CloudOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 
 const { Sider } = Layout;
@@ -47,7 +47,7 @@ const Sidebar = () => {
         <Menu.Item key="/modelList" icon={<BuildOutlined style={{ fontSize: '18px', marginRight: '8px' }} />} style={{ padding: '8px 16px', marginBottom: '8px' }}>
           Manage Model
         </Menu.Item>
-        <Menu.Item key="/area" icon={<BuildOutlined style={{ fontSize: '18px', marginRight: '8px' }} />} style={{ padding: '8px 16px', marginBottom: '8px' }}>
+        <Menu.Item key="/area" icon={<CloudOutlined style={{ fontSize: '18px', marginRight: '8px' }} />} style={{ padding: '8px 16px', marginBottom: '8px' }}>
           Manage Area
         </Menu.Item>
         <Divider style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)' }} />

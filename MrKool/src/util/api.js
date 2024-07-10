@@ -26,7 +26,7 @@ const api = {
         const url = `Area/UpdateArea/${id}`;
         return axiosClient.put(url, data);
     },
-    createPackage: (params) => {
+    createArea: (params) => {
         const url = "Area/CreateArea";
         return axiosClient.post(url, params);
     },
