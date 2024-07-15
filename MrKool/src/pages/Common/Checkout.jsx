@@ -1,7 +1,8 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Card, List, Descriptions, Row, Col, Radio, Button } from 'antd';
-import "../../styles/checkout.css"
+import "../../styles/checkout.css";
+
 const CheckoutPage = () => {
   const location = useLocation();
   const bookingData = location.state;
@@ -10,13 +11,14 @@ const CheckoutPage = () => {
   const handlePayment = () => {
     console.log('Processing payment...');
   };
+
   const handleBack = () => {
     navigate('/booking', { state: bookingData });
   };
+
   const formatPrice = (price) => {
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
   };
-
 
   return (
     <div className="checkout-page">
@@ -26,14 +28,26 @@ const CheckoutPage = () => {
           <Card title="Loại máy lạnh">
             <List
               bordered
-              dataSource={bookingData.selectedModels}
+              dataSource={[bookingData.selectedModel]}
               renderItem={(item, index) => (
                 <List.Item key={index}>
                   <List.Item.Meta
                     title={item.title}
-                    description={
-                      <img src={item.conditionerModelImage} alt={item.title} style={{ width: '50px' }} />
-                    }
+                    description={<img src={item.image} alt={item.title} style={{ width: '50px' }} />}
+                  />
+                </List.Item>
+              )}
+            />
+          </Card>
+          <Card title="Dịch vụ đã chọn">
+            <List
+              bordered
+              dataSource={bookingData.selectedServices}
+              renderItem={(item, index) => (
+                <List.Item key={index}>
+                  <List.Item.Meta
+                    title={item.description}
+                    description={formatPrice(item.price)}
                   />
                 </List.Item>
               )}
@@ -48,16 +62,14 @@ const CheckoutPage = () => {
               <Descriptions.Item label="Địa chỉ">{bookingData.address}</Descriptions.Item>
               <Descriptions.Item label="Ngày làm">{bookingData.date}</Descriptions.Item>
               <Descriptions.Item label="Thời gian">{bookingData.time}</Descriptions.Item>
-              <Descriptions.Item label="Khu vực">
-                {bookingData.station}
-              </Descriptions.Item>
+              <Descriptions.Item label="Khu vực">{bookingData.station}</Descriptions.Item>
               <Descriptions.Item label="Phương thức thanh toán">
                 <Radio.Group>
                   <Radio value="vnpay">VNPAY</Radio>
                 </Radio.Group>
               </Descriptions.Item>
               <Descriptions.Item label="Tổng giá">
-              {formatPrice(bookingData.totalPrice)}
+                {formatPrice(bookingData.totalPrice)}
               </Descriptions.Item>
             </Descriptions>
             <div style={{ textAlign: 'center', marginTop: '16px'}}>
@@ -65,15 +77,14 @@ const CheckoutPage = () => {
                 Thanh toán
               </Button>
               <Button onClick={handleBack}>
-                Back
+                Quay lại
               </Button>
             </div>
           </Card>
         </Col>
-
+       
       </Row>
     </div>
-
   );
 };
 

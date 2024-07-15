@@ -3,6 +3,7 @@ import { Form, Input, Select, DatePicker, TimePicker, Button, message } from 'an
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchModels } from '../../redux/slice/modelSlice';
 import { fetchStations } from '../../redux/slice/stationSlice';
+import { fetchService } from '../../redux/slice/serviceSlice';
 import '../../styles/booking.css';
 import { useNavigate } from 'react-router-dom';
 const { Option } = Select;
@@ -10,35 +11,47 @@ const { Option } = Select;
 const BookingPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const models = useSelector(state => state.model.models);
   const loadingModels = useSelector(state => state.model.loading);
   const errorModels = useSelector(state => state.model.error);
   const stations = useSelector(state => state.station.data);
+  const services = useSelector(state => state.service.data);
+  const serviceLoading = useSelector(state => state.service.loading);
+  const serviceError = useSelector(state => state.service.error);
 
   const [form] = Form.useForm();
-  const [selectedModels, setSelectedModels] = useState([]);
+  const [selectedServices, setSelectedServices] = useState([]);
+  const [preselectedModel, setPreselectedModel] = useState(null);
 
   useEffect(() => {
     dispatch(fetchModels());
     dispatch(fetchStations());
+    dispatch(fetchService());
+
+    const storedModel = localStorage.getItem('selectedModel');
+    if (storedModel) {
+      setPreselectedModel(JSON.parse(storedModel));
+      localStorage.removeItem('selectedModel');
+    }
   }, [dispatch]);
 
-  const handleSelectModel = (value) => {
-    const selected = models.find(model => model.conditionerModelID === value);
-    if (selected && !selectedModels.some(model => model.conditionerModelID === selected.conditionerModelID)) {
-      setSelectedModels([...selectedModels, selected]);
+  const handleSelectService = (value) => {
+    const selected = services.find(service => service.serviceID === value);
+    if (selected && !selectedServices.some(service => service.serviceID === selected.serviceID)) {
+      setSelectedServices([...selectedServices, selected]);
     }
   };
 
-  const handleRemoveModel = (index) => {
-    const updatedModels = [...selectedModels];
-    updatedModels.splice(index, 1);
-    setSelectedModels(updatedModels);
+  const handleRemoveService = (index) => {
+    const updatedServices = [...selectedServices];
+    updatedServices.splice(index, 1);
+    setSelectedServices(updatedServices);
   };
 
   const totalPrice = useMemo(() => {
-    return selectedModels.reduce((sum, model) => sum + model.price, 0);
-  }, [selectedModels]);
+    const modelPrice = preselectedModel ? preselectedModel.price : 0;
+    const servicesPrice = selectedServices.reduce((sum, service) => sum + service.price, 0);
+    return modelPrice + servicesPrice;
+  }, [preselectedModel, selectedServices]);
 
   const onFinish = (values) => {
     console.log('Thông tin biểu mẫu:', values);
@@ -49,7 +62,8 @@ const BookingPage = () => {
       ...values,
       date: values.date ? values.date.format('YYYY-MM-DD') : null,
       time: values.time ? values.time.format('HH:mm') : null,
-      selectedModels: selectedModels,
+      selectedModel: preselectedModel,
+      selectedServices: selectedServices,
       totalPrice: totalPrice
     };
 
@@ -74,57 +88,56 @@ const BookingPage = () => {
         layout="vertical"
         onFinish={onFinish}
       >
+        {preselectedModel && (
+          <Form.Item label="Loại máy lạnh">
+            <Input disabled value={`${preselectedModel.title} - ${formatPrice(preselectedModel.price)}`} />
+          </Form.Item>
+        )}
+
         <Form.Item
-          label="Chọn loại máy lạnh"
-          name="modelType"
-          rules={[{ required: true, message: 'Vui lòng chọn loại máy lạnh' }]}
+          label="Chọn dịch vụ"
+          name="services"
+          rules={[{ required: true, message: 'Vui lòng chọn dịch vụ' }]}
         >
           <Select
             showSearch
-            placeholder="Chọn loại"
-            loading={loadingModels}
+            placeholder="Chọn dịch vụ"
+            loading={serviceLoading}
             optionFilterProp="children"
-            onChange={handleSelectModel}
+            onChange={handleSelectService}
             filterOption={(input, option) =>
               option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
             }
           >
-            {models.map(model => (
-              <Option key={model.conditionerModelID} value={model.conditionerModelID}>
-                <div>
-                  <img
-                    src={model.conditionerModelImage}
-                    alt={model.title}
-                    style={{ width: '20px', marginRight: '5px' }}
-                  />
-                  {model.title} - {formatPrice(model.price)}
-                </div>
+            {services.map(service => (
+              <Option key={service.serviceID} value={service.serviceID}>
+                {service.title} - {formatPrice(service.price)}
               </Option>
             ))}
           </Select>
         </Form.Item>
 
-        <div>
-          <Button
-            type="link"
-            onClick={() => form.setFieldsValue({ modelType: null })}
-          >
-            + Thêm loại khác
-          </Button>
-        </div>
-
-        {selectedModels.map((selectedModel, index) => (
+        {selectedServices.map((selectedService, index) => (
           <Form.Item
             key={index}
-            label={`Loại máy lạnh ${index + 1}`}
-            name={`modelType-${index}`}
+            label={`Dịch vụ ${index + 1}`}
+            name={`service-${index}`}
           >
-            <Input disabled value={`${selectedModel.title} - ${selectedModel.price} VND`} />
-            <Button type="link" onClick={() => handleRemoveModel(index)}>
+            <Input disabled value={`${selectedService.description} - ${formatPrice(selectedService.price)}`} />
+            <Button type="link" onClick={() => handleRemoveService(index)}>
               Xóa
             </Button>
           </Form.Item>
         ))}
+
+        <Button
+          type="dashed"
+          onClick={() => form.setFieldsValue({ services: null })}
+          style={{ width: '100%', marginBottom: '16px' }}
+        >
+          + Thêm dịch vụ khác
+        </Button>
+
 
         <Form.Item
           label="Địa chỉ"
@@ -164,6 +177,7 @@ const BookingPage = () => {
         >
           <TimePicker format="HH:mm" />
         </Form.Item>
+
 
         <Form.Item
           label="Trạm dịch vụ"

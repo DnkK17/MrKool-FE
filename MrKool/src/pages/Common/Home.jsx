@@ -8,27 +8,27 @@ import { useNavigate } from 'react-router-dom';
 
 const { Meta } = Card;
 
-const priceTableColumns = [
+const serviceTableColumns = [
   {
-    title: 'Model',
+    title: 'Service',
     dataIndex: 'title',
     key: 'title',
   },
   {
-    title: 'Price',
-    dataIndex: `price`,
-    key: 'price',
-    render: (text) => `$${text}`,
+    title: 'Description',
+    dataIndex: 'description',
+    key: 'description',
   },
 ];
+
 
 const Home = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const data = useSelector(state => state.service.data);
+  const services = useSelector(state => state.service.data);
   const serviceLoading = useSelector(state => state.service.loading);
   const serviceError = useSelector(state => state.service.error);
-  const models = useSelector(state => state.model.models); // Access models from Redux store
+  const models = useSelector(state => state.model.models);
   const modelLoading = useSelector(state => state.model.loading);
   const modelError = useSelector(state => state.model.error);
 
@@ -38,8 +38,8 @@ const Home = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    console.log('Models:', models); 
-  }, [models]); 
+    console.log('Models:', models);
+  }, [models]);
 
   if (serviceLoading || modelLoading) {
     return <div>Loading...</div>;
@@ -48,7 +48,10 @@ const Home = () => {
   if (serviceError || modelError) {
     return <div>Error: {serviceError || modelError}</div>;
   }
-
+  const handleBooking = (model) => {
+    localStorage.setItem('selectedModel', JSON.stringify(model));
+    navigate('/booking');
+  };
   return (
     <div className="home-container">
       {/* Hero Section */}
@@ -63,50 +66,52 @@ const Home = () => {
         </Row>
       </div>
 
-      {/* Services Section */}
-      <div className="services-section">
+      {/* Models Section */}
+      <div className="models-section">
         <Row justify="center" align="middle">
           <Col xs={24} className="text-center">
-            <h2 className="section-title">Các loại dịch vụ</h2>
+            <h2 className="section-title">Các loại model máy lạnh</h2>
           </Col>
         </Row>
         <Row gutter={[16, 16]} justify="center">
-          {data.slice(0, 5).map((service, index) => (
-            <Col xs={24} sm={12} md={6} key={index} className="service-col">
+          {models.slice(0, 5).map((model, index) => (
+            <Col xs={24} sm={12} md={6} key={index} className="model-col">
               <Card
-                className="service-card"
+                className="model-card"
                 hoverable
                 style={{ width: '100%' }}
-                cover={<img alt={service.title} src={service.imageUrl} style={{ height: '150px', objectFit: 'cover' }} />}
+                cover={<img alt={model.title} src={model.image} style={{ height: '150px', objectFit: 'cover' }} />}
                 actions={[
-                  <Button key="detail" type="primary" size="small" onClick={() => navigate(`/service/${service.serviceID}`)}>
-                    Xem chi tiết
+                  <Button key="detail" type="primary" size="small" onClick={() => handleBooking(model)}>
+                    Đặt dịch vụ
                   </Button>
                 ]}
               >
-                <Meta title={service.title} description={service.description} style={{ fontSize: '14px' }} />
+                <Meta title={model.title} description={`Price: $${model.price.toFixed(2)}`} style={{ fontSize: '14px' }} />
               </Card>
             </Col>
           ))}
         </Row>
-        <Button key="more" type="link" size="small" onClick={() => navigate('/service')}>
+        <Button key="more" type="link" size="small" onClick={() => navigate('/model')}>
           See More
         </Button>
       </div>
-      <div className="price-table-section">
+
+      {/* Services Table Section */}
+      <div className="services-table-section">
         <Row justify="center" align="middle">
           <Col xs={24} className="text-center">
-            <h2 className="section-title">Bảng giá</h2>
+            <h2 className="section-title">Bảng các loại dịch vụ</h2>
           </Col>
         </Row>
         <Row justify="center">
           <Col xs={24} md={18}>
             <Table
-              columns={priceTableColumns}
-              dataSource={models}
+              columns={serviceTableColumns}
+              dataSource={services}
               pagination={false}
-              className="price-table"
-              rowKey="serviceID" 
+              className="services-table"
+              rowKey="serviceID"
             />
           </Col>
         </Row>

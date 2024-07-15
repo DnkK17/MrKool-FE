@@ -12,12 +12,13 @@ const Login = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const auth = useSelector(state => state.auth);
+    const [roleName, setRoleName] = useState('');
 
     const onFinish = async (values) => {
         dispatch(clearError());
         try {
             if (isSignUp) {
-                const resultAction = await dispatch(registerUser(values));
+                const resultAction = await dispatch(registerUser({ ...values, roleName }));
                 if (registerUser.fulfilled.match(resultAction)) {
                     const { user, token } = resultAction.payload;
                     message.success(`Đăng ký thành công. Chào bạn, ${user.name}!`);
@@ -55,6 +56,15 @@ const Login = () => {
         console.log('Thất bại:', errorInfo);
     };
 
+    const toggleSignUp = () => {
+        setIsSignUp(!isSignUp);
+        if (!isSignUp) {
+            setRoleName('Customer');
+        } else {
+            setRoleName('');
+        }
+    };
+
     return (
         <div className='login-container'>
             <div className={`container ${isSignUp ? 'active' : ''}`} id="container">
@@ -75,12 +85,21 @@ const Login = () => {
                         </div>
                         <span>{isSignUp ? 'hoặc sử dụng email của bạn để đăng ký' : 'hoặc sử dụng email của bạn để đăng nhập'}</span>
                         {isSignUp && (
+                            <>
                             <Form.Item
                                 name="name"
                                 rules={[{ required: true, message: 'Vui lòng nhập tên của bạn!' }]}
                             >
                                 <Input placeholder="Tên" />
                             </Form.Item>
+                            <Form.Item
+                                name="telephone"
+                                rules={[{ required: true, message: 'Nhập số điện thoại!' }]}
+                            >
+                                <Input placeholder="Số điện thoại" type='phone' />
+                            </Form.Item>
+                            </>
+                            
                         )}
                         <Form.Item
                             name="email"
@@ -94,6 +113,15 @@ const Login = () => {
                         >
                             <Input.Password placeholder="Mật khẩu" />
                         </Form.Item>
+                        {isSignUp && (
+                            <Form.Item
+                                name="roleName"
+                                initialValue="Customer"
+                                hidden
+                            >
+                                <Input disabled />
+                            </Form.Item>
+                        )}
                         {!isSignUp && <a href="#">Quên mật khẩu?</a>}
                         <Form.Item>
                             <Button type="primary" htmlType="submit">

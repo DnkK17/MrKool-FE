@@ -42,7 +42,7 @@
     transform: translateY(0);
   }
 }
-.services-section {
+.models-section {
   padding: 50px 0;
 }
 
@@ -52,7 +52,7 @@
   font-size: 2.5rem;
 }
 
-.service-card {
+.model-card {
   margin: 0 3rem;
   padding: 20px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -69,18 +69,18 @@
 /* Price Table Section */
 /* src/styles/PriceTable.css */
 
-.price-table-section {
+.services-table-section {
   padding: 50px 20px;
   background-color: #f9f9f9;
 }
 
-.price-table {
+.services-table-section {
   background-color: white;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.price-table .ant-table-thead > tr > th {
+.services-table-section .ant-table-thead > tr > th {
   background-color: #1890ff;
   color: white;
   font-size: 18px;
@@ -88,16 +88,16 @@
   text-align: center;
 }
 
-.price-table .ant-table-tbody > tr > td {
+.services-table-section .ant-table-tbody > tr > td {
   text-align: center;
   font-size: 16px;
   padding: 12px 8px;
 }
 
-.price-table .ant-table-tbody > tr:nth-child(odd) {
+.services-table-section .ant-table-tbody > tr:nth-child(odd) {
   background-color: #f1f1f1;
 }
 
-.price-table .ant-table-tbody > tr:hover {
+.services-table-section .ant-table-tbody > tr:hover {
   background-color: #e6f7ff;
 }
