@@ -1,136 +1,81 @@
-// orderSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axiosClient from '../../util/axios';
+import api from '../../util/api'
+const initialState = {
+    orders: [],
+    status: 'idle', // idle, loading, succeeded, failed
+    error: null,
+};
 
-export const getOrder = createAsyncThunk('order/getOrder', async () => {
-    const response = await axiosClient.get('Order/Orders');
+// Thunks để gọi các hàm API
+export const fetchOrders = createAsyncThunk('orders/fetchOrders', async () => {
+    const response = await api.getOrder();
+    return response.$values;
+});
+
+export const fetchOrderById = createAsyncThunk('orders/fetchOrderById', async (id) => {
+    const response = await api.getOrderById(id);
     return response.data;
 });
 
-export const getOrderById = createAsyncThunk('order/getOrderById', async (id) => {
-    const response = await axiosClient.get(`Order/${id}`);
+export const searchOrders = createAsyncThunk('orders/searchOrders', async (keyword) => {
+    const response = await api.searchOrder(keyword);
     return response.data;
 });
 
-export const searchOrder = createAsyncThunk('order/searchOrder', async (keyword) => {
-    const response = await axiosClient.get(`Order/search/${keyword}`);
+export const updateOrderAsync = createAsyncThunk('orders/updateOrder', async ({ id, data }) => {
+    const response = await api.updateOrder(id, data);
     return response.data;
 });
 
-export const updateOrder = createAsyncThunk('order/updateOrder', async ({ id, data }) => {
-    const response = await axiosClient.put(`Order/UpdateOrder/${id}`, data);
+export const createOrderAsync = createAsyncThunk('orders/createOrder', async (params) => {
+    const response = await api.createOrder(params);
     return response.data;
 });
 
-export const createOrder = createAsyncThunk('order/createOrder', async (params) => {
-    const response = await axiosClient.post('Order/CreateOrder', params);
-    return response.data;
+export const deleteOrderAsync = createAsyncThunk('orders/deleteOrder', async (id) => {
+    await api.deleteOrder(id);
+    return id;
 });
 
-export const deleteOrder = createAsyncThunk('order/deleteOrder', async (id) => {
-    const response = await axiosClient.delete(`Order/DeleteOrder/${id}`);
-    return response.data;
-});
-
-export const updateOrderStatus = createAsyncThunk('order/updateOrderStatus', async ({ id, data }) => {
-    const response = await axiosClient.put(`Order/techinician/complete/${id}`, data);
+export const updateOrderStatusAsync = createAsyncThunk('orders/updateOrderStatus', async ({ id, data }) => {
+    const response = await api.updateOrderStatus(id, data);
     return response.data;
 });
 
 const orderSlice = createSlice({
-    name: 'order',
-    initialState: {
-        data: [],
-        currentOrder: null,
-        loading: false,
-        error: null,
-    },
-    reducers: {
-        clearError: (state) => {
-            state.error = null;
-        }
-    },
+    name: 'orders',
+    initialState,
+    reducers: {},
     extraReducers: (builder) => {
-        builder
-            .addCase(getOrder.pending, (state) => {
-                state.loading = true;
-            })
-            .addCase(getOrder.fulfilled, (state, action) => {
-                state.loading = false;
-                state.data = action.payload;
-            })
-            .addCase(getOrder.rejected, (state, action) => {
-                state.loading = false;
-                state.error = action.error.message;
-            })
-            .addCase(getOrderById.pending, (state) => {
-                state.loading = true;
-            })
-            .addCase(getOrderById.fulfilled, (state, action) => {
-                state.loading = false;
-                state.currentOrder = action.payload;
-            })
-            .addCase(getOrderById.rejected, (state, action) => {
-                state.loading = false;
-                state.error = action.error.message;
-            })
-            .addCase(searchOrder.pending, (state) => {
-                state.loading = true;
-            })
-            .addCase(searchOrder.fulfilled, (state, action) => {
-                state.loading = false;
-                state.data = action.payload;
-            })
-            .addCase(searchOrder.rejected, (state, action) => {
-                state.loading = false;
-                state.error = action.error.message;
-            })
-            .addCase(updateOrder.pending, (state) => {
-                state.loading = true;
-            })
-            .addCase(updateOrder.fulfilled, (state, action) => {
-                state.loading = false;
-                state.currentOrder = action.payload;
-            })
-            .addCase(updateOrder.rejected, (state, action) => {
-                state.loading = false;
-                state.error = action.error.message;
-            })
-            .addCase(createOrder.pending, (state) => {
-                state.loading = true;
-            })
-            .addCase(createOrder.fulfilled, (state, action) => {
-                state.loading = false;
-                state.data.push(action.payload);
-            })
-            .addCase(createOrder.rejected, (state, action) => {
-                state.loading = false;
-                state.error = action.error.message;
-            })
-            .addCase(deleteOrder.pending, (state) => {
-                state.loading = true;
-            })
-            .addCase(deleteOrder.fulfilled, (state, action) => {
-                state.loading = false;
-                state.data = state.data.filter(order => order.id !== action.payload.id);
-            })
-            .addCase(deleteOrder.rejected, (state, action) => {
-                state.loading = false;
-                state.error = action.error.message;
-            })
-            .addCase(updateOrderStatus.pending, (state) => {
-                state.loading = true;
-            })
-            .addCase(updateOrderStatus.fulfilled, (state, action) => {
-                state.loading = false;
-                state.currentOrder = action.payload;
-            })
-            .addCase(updateOrderStatus.rejected, (state, action) => {
-                state.loading = false;
-                state.error = action.error.message;
-            });
+        builder.addCase(fetchOrders.pending, (state) => {
+            state.status = 'loading';
+        });
+        builder.addCase(fetchOrders.fulfilled, (state, action) => {
+            state.status = 'succeeded';
+            state.orders = action.payload;
+        });
+        builder.addCase(fetchOrders.rejected, (state, action) => {
+            state.status = 'failed';
+            state.error = action.error.message;
+        });
+
+        // Xử lý hành động deleteOrderAsync
+        builder.addCase(deleteOrderAsync.fulfilled, (state, action) => {
+            state.orders = state.orders.filter(order => order.id !== action.payload);
+        });
+
+        // Các hành động khác như fetchOrderById, searchOrders, updateOrderAsync, createOrderAsync, updateOrderStatusAsync sẽ được xử lý tương tự ở đây
+        builder.addCase(fetchOrderById.fulfilled, (state, action) => {
+            // Xử lý khi fetchOrderById thành công
+        });
+        builder.addCase(fetchOrderById.rejected, (state, action) => {
+            // Xử lý khi fetchOrderById thất bại
+        });
+
+        // Thêm xử lý cho các thunks khác tại đây
     },
 });
 
-export const { clearError } = orderSlice.actions;
 export default orderSlice.reducer;
+
+

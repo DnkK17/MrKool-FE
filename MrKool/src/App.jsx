@@ -15,10 +15,13 @@ import Area from './pages/Admin/Area.jsx';
 import CheckoutPage from './pages/Common/Checkout.jsx';
 import TechinicianLayout from './pages/TechnicianLayout.jsx';
 import ManagerLayout from './pages/ManagerLayout.jsx';
+import ViewOrderPage from './pages/Manager/Order/Order.jsx';
+import ViewRequestsPage from './pages/Manager/Request.jsx';
+import TechnicianViewPage from './pages/Technician/request.jsx';
 
 function App() {
   const navigate = useNavigate();
-  const isLoggedIn = false; // Set this based on your authentication logic
+  const isLoggedIn = true; // Set this based on your authentication logic
 
   useEffect(() => {
     // Redirect to login if not logged in and accessing private routes
@@ -39,10 +42,11 @@ function App() {
           <Route path="/area" element={<Area />} />
         </Route>
         <Route element={<TechinicianLayout />}>
-          {/* Add routes for technician layout if needed */}
+        <Route path='/calendar' element={<TechnicianViewPage/>}/>
         </Route>
         <Route element={<ManagerLayout />}>
-          {/* Add routes for manager layout if needed */}
+        <Route path='/order' element={<ViewOrderPage/>}/>
+        <Route path='/requestList' element={<ViewRequestsPage/>}/>
         </Route>
         <Route path="/" element={<UserLayout />}>
           <Route index element={<Home />} />

@@ -1,33 +1,40 @@
 import React, { useEffect } from 'react';
-import { Button, Table, Spin, message } from 'antd';
+import { Button, Table, Spin, Tag } from 'antd';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getOrder, deleteOrder, clearError } from '../../redux/slice/orderSlice';
+import { fetchOrders, deleteOrderAsync } from '../../../redux/slice/orderSlice';
+
 const ViewOrderPage = () => {
   const dispatch = useDispatch();
-  const { data: orders, loading, error } = useSelector(state => state.order);
+  const { orders, loading, error } = useSelector(state => state.order);
 
   useEffect(() => {
-    dispatch(getOrder());
+    dispatch(fetchOrders());
   }, [dispatch]);
 
-  useEffect(() => {
-    if (error) {
-      message.error(error);
-      dispatch(clearError());
-    }
-  }, [error, dispatch]);
-
   const handleDelete = (id) => {
-    dispatch(deleteOrder(id)).then(() => {
-      dispatch(getOrder());
-    });
+    dispatch(deleteOrderAsync(id));
   };
 
   const columns = [
-    { title: 'Order ID', dataIndex: 'id', key: 'id' },
-    { title: 'Customer', dataIndex: 'customer', key: 'customer' },
-    { title: 'Total', dataIndex: 'total', key: 'total' },
+    { title: 'Index', render: (text, record, index) => index + 1 },    { title: 'Customer', dataIndex: 'customerID', key: 'customerID' },
+    { title: 'Detail', dataIndex: 'detail', key: 'detail' },
+    { title: 'Date', dataIndex: 'date', key: 'date' },
+    { title: 'Time', dataIndex: 'time', key: 'time' },
+    { title: 'Address', dataIndex: 'address', key: 'address' },
+    {
+      title: 'Status',
+      dataIndex: 'status',
+      key: 'status',
+      render: (status) => (
+        <Tag color={status === 'Completed' ? 'green' : status === 'Pending' ? 'blue' : 'orange'}>{status}</Tag>
+      ),
+    },
+    {
+      title: 'Technician',
+      dataIndex: 'technician',
+      key: 'technician',
+    },
     {
       title: 'Action',
       key: 'action',
@@ -40,8 +47,19 @@ const ViewOrderPage = () => {
     },
   ];
 
+  const pagination = {
+    pageSize: 5,
+    showSizeChanger: true,
+    pageSizeOptions: ['5', '10', '15', '20'],
+    showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+  };
+
   if (loading) {
     return <Spin size="large" />;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
   }
 
   return (
@@ -49,7 +67,7 @@ const ViewOrderPage = () => {
       <Button type="primary" style={{ marginBottom: 16 }}>
         <Link to="/order/new">Add New Order</Link>
       </Button>
-      <Table dataSource={orders} columns={columns} rowKey="id" />
+      <Table dataSource={orders} columns={columns} rowKey="id" pagination={pagination} />
     </div>
   );
 };
