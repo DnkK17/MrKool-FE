@@ -1,15 +1,39 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Card, List, Descriptions, Row, Col, Radio, Button } from 'antd';
+import { Card, List, Descriptions, Row, Col, Radio, Button, message, Form, Input } from 'antd';
+import { useSelector, useDispatch } from 'react-redux';
+import { createPayment } from '../../redux/slice/paymentSlice';
 import "../../styles/checkout.css";
 
 const CheckoutPage = () => {
   const location = useLocation();
   const bookingData = location.state;
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const paymentStatus = useSelector(state => state.payment.paymentStatus);
+  const [orderInfo, setOrderInfo] = React.useState("");
 
   const handlePayment = () => {
-    console.log('Processing payment...');
+    dispatch(createPayment({ ...bookingData, orderInfo }))
+      .unwrap()
+      .then((result) => {
+        console.log('Payment successful:', result);
+        message.success('Thanh toán thành công');
+        navigate('/success');
+      })
+      .catch((error) => {
+        if (error.response && error.response.status === 400) {
+          const validationErrors = error.response.data.errors;
+          if (validationErrors && validationErrors.OrderInfo) {
+            message.error(validationErrors.OrderInfo[0]);
+          } else {
+            message.error('Đã xảy ra lỗi khi thanh toán');
+          }
+        } else {
+          console.error('Payment failed:', error);
+          message.error('Đã xảy ra lỗi khi thanh toán');
+        }
+      });
   };
 
   const handleBack = () => {
@@ -18,6 +42,10 @@ const CheckoutPage = () => {
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
+  };
+
+  const handleOrderInfoChange = (e) => {
+    setOrderInfo(e.target.value);
   };
 
   return (
@@ -72,8 +100,15 @@ const CheckoutPage = () => {
                 {formatPrice(bookingData.totalPrice)}
               </Descriptions.Item>
             </Descriptions>
-            <div style={{ textAlign: 'center', marginTop: '16px'}}>
-              <Button type="primary" onClick={handlePayment} style={{ marginRight: "10px"}}>
+            <Form.Item
+              label="Thông tin chuyển khoản"
+              name="orderInfo"
+              rules={[{ required: true, message: 'Nhập thông tin chuyển khoản' }]}
+            >
+              <Input.TextArea rows={4} placeholder="Nhập thông tin chuyển khoản" value={orderInfo} onChange={handleOrderInfoChange} />
+            </Form.Item>
+            <div style={{ textAlign: 'center', marginTop: '16px' }}>
+              <Button type="primary" onClick={handlePayment} style={{ marginRight: "10px" }}>
                 Thanh toán
               </Button>
               <Button onClick={handleBack}>
@@ -82,7 +117,6 @@ const CheckoutPage = () => {
             </div>
           </Card>
         </Col>
-       
       </Row>
     </div>
   );

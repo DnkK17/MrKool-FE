@@ -8,7 +8,7 @@ import { fetchModels, createModel, updateModel, deleteModel } from '../../redux/
 
 const { Title } = Typography;
 
-const ManageAccount = () => {
+const ManageModel = () => {
   const dispatch = useDispatch();
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
@@ -140,9 +140,9 @@ const ManageAccount = () => {
       key: 'title',
     },
     {
-      title: 'Description',
-      dataIndex: 'description',
-      key: 'description',
+      title: 'Image',
+      dataIndex: 'image',
+      key: 'image',
     },
     {
       title: 'Price',
@@ -200,9 +200,9 @@ const ManageAccount = () => {
             <Input onChange={e => setFormData({ ...formData, title: e.target.value })} value={formData.title} />
           </Form.Item>
           <Form.Item
-            label="Description"
-            name="description"
-            initialValue={formData.description}
+            label="Image"
+            name="image"
+            initialValue={formData.image}
             rules={[{ required: true, message: 'Please input the description!' }]}
           >
             <Input onChange={e => setFormData({ ...formData, description: e.target.value })} value={formData.description} />
@@ -232,4 +232,4 @@ const ManageAccount = () => {
   );
 };
 
-export default ManageAccount;
+export default ManageModel;

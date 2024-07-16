@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, Table, Input, Button, Space, Modal, Form, message } from 'antd';
-import { SearchOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Typography, Table, Input, Button, Space, Modal, Form, message, Upload } from 'antd';
+import { SearchOutlined, EditOutlined, DeleteOutlined, UploadOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import '../../styles/dashboard.css';
 import { useDispatch, useSelector } from 'react-redux';
@@ -17,6 +17,7 @@ const ManageModel = () => {
   const [formData, setFormData] = useState({});
   const [editingKey, setEditingKey] = useState('');
   const [deleteKey, setDeleteKey] = useState(null);
+  const [imageUrl, setImageUrl] = useState('');
 
   const models = useSelector(state => state.model.models);
   const loading = useSelector(state => state.model.loading);
@@ -98,11 +99,11 @@ const ManageModel = () => {
   const handleEdit = record => {
     setModalVisible(true);
     setFormData(record);
+    setImageUrl(record.image); // Set initial image URL for preview
     setEditingKey(record.conditionerModelID);
   };
 
   const handleDelete = () => {
-    console.log('Deleting model with ID:', deleteKey);  // Log for debugging
     dispatch(deleteModel(deleteKey));
     message.success('Model deleted successfully');
     setConfirmDeleteVisible(false);
@@ -110,19 +111,22 @@ const ManageModel = () => {
   };
 
   const handleModalOk = () => {
+    const updatedData = { ...formData, image: imageUrl }; // Add image URL to form data
     if (editingKey) {
-      dispatch(updateModel({ id: editingKey, data: formData }));
+      dispatch(updateModel({ id: editingKey, data: updatedData }));
     } else {
-      dispatch(createModel(formData));
+      dispatch(createModel(updatedData));
     }
     message.success(editingKey ? 'Model updated successfully' : 'Model added successfully');
     setModalVisible(false);
     setEditingKey('');
+    setImageUrl(''); // Clear image URL after submitting
   };
 
   const handleModalCancel = () => {
     setModalVisible(false);
     setEditingKey('');
+    setImageUrl(''); // Clear image URL on cancel
   };
 
   const isEditing = record => record.conditionerModelID === editingKey;
@@ -140,9 +144,10 @@ const ManageModel = () => {
       key: 'title',
     },
     {
-      title: 'Description',
-      dataIndex: 'description',
-      key: 'description',
+      title: 'Image',
+      dataIndex: 'image',
+      key: 'image',
+      render: (text) => <img src={text} alt="model" style={{ width: '100px' }} />,
     },
     {
       title: 'Price',
@@ -168,6 +173,22 @@ const ManageModel = () => {
       },
     },
   ];
+
+  const getBase64 = (file, callback) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => callback(reader.result);
+    reader.onerror = error => console.log('Error: ', error);
+  };
+
+  const handleImageUpload = info => {
+    if (info.file.status === 'done' || info.file.status === 'uploading') {
+      getBase64(info.file.originFileObj, imageUrl => {
+        setImageUrl(imageUrl);
+        setFormData({ ...formData, image: imageUrl });
+      });
+    }
+  };
 
   return (
     <div className='account-container'>
@@ -200,12 +221,21 @@ const ManageModel = () => {
             <Input onChange={e => setFormData({ ...formData, title: e.target.value })} value={formData.title} />
           </Form.Item>
           <Form.Item
-            label="Description"
-            name="description"
-            initialValue={formData.description}
-            rules={[{ required: true, message: 'Please input the description!' }]}
+            label="Image"
+            name="image"
+            initialValue={formData.image}
+            rules={[{ required: true, message: 'Please input the image!' }]}
           >
-            <Input onChange={e => setFormData({ ...formData, description: e.target.value })} value={formData.description} />
+            <Upload
+              name="image"
+              listType="picture-card"
+              className="avatar-uploader"
+              showUploadList={false}
+              beforeUpload={() => false} // Prevent automatic upload
+              onChange={handleImageUpload}
+            >
+              {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : <UploadOutlined />}
+            </Upload>
           </Form.Item>
           <Form.Item
             label="Price"
@@ -213,7 +243,11 @@ const ManageModel = () => {
             initialValue={formData.price}
             rules={[{ required: true, message: 'Please input the price!' }]}
           >
-            <Input type="number" onChange={e => setFormData({ ...formData, price: e.target.value })} value={formData.price} />
+            <Input
+              type="number"
+              onChange={e => setFormData({ ...formData, price: e.target.value })}
+              value={formData.price}
+            />
           </Form.Item>
         </Form>
       </Modal>
@@ -226,7 +260,7 @@ const ManageModel = () => {
         okText="Delete"
         cancelText="Cancel"
       >
-        <p>Are you sure you want to delete this Model?</p>
+        <p>Are you sure you want to delete this model?</p>
       </Modal>
     </div>
   );

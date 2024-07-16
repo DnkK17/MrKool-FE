@@ -8,6 +8,7 @@ import areaSlice from "./slice/areaSlice";
 import modelSlice from "./slice/modelSlice";
 import requestSlice from "./slice/requestSlice";
 import stationSlice from "./slice/stationSlice";
+import paymentSlice from "./slice/paymentSlice";
 
 export const store = configureStore({
     reducer: {
@@ -18,7 +19,8 @@ export const store = configureStore({
         area: areaSlice,
         model: modelSlice,
         request: requestSlice,
-        station: stationSlice
+        station: stationSlice,
+        payment: paymentSlice,
     },
     // middleware: getDefaulMiddleWare => getDefaulMiddleWare().concat(api.middleware),
     devTools: true
