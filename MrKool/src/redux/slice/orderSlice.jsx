@@ -3,6 +3,15 @@ import axios from 'axios';
 
 const API_URL = 'https://65459cb4fe036a2fa9549229.mockapi.io/order';
 
+const getCurrentUser = () => {
+    const userJSON = localStorage.getItem('currentUser');
+    if (userJSON) {
+      return JSON.parse(userJSON);
+    } else {
+      return null; 
+    }
+  };
+
 export const fetchOrders = createAsyncThunk(
   'request/fetchOrders',
   async (_, { rejectWithValue }) => {
@@ -50,19 +59,31 @@ export const createOrder = createAsyncThunk(
       }
     }
   );
-
+  export const assignTechnician = createAsyncThunk(
+    'order/assignTechnician',
+    async ({ id, technician }, { rejectWithValue, dispatch }) => {
+      try {
+        const data = { id, technician };
+  
+        const response = await axios.put(`${API_URL}/${id}`, data);
+          dispatch(fetchOrders());
+  
+        return response.data;
+      } catch (error) {
+        return rejectWithValue(error.message);
+      }
+    }
+  );
 const orderSlice = createSlice({
   name: 'order',
   initialState: {
     orders: [],
     loading: false,
     error: null,
-    technician: null,
+    currentUser: getCurrentUser(), 
   },
   reducers: {
-    setTechnician: (state, action) => {
-        state.technician = action.payload;
-  },
+  
 },
   extraReducers: (builder) => {
     builder
@@ -112,10 +133,24 @@ const orderSlice = createSlice({
       .addCase(createOrder.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      .addCase(assignTechnician.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(assignTechnician.fulfilled, (state, action) => {
+        state.loading = false;
+        const { orderId, technician } = action.payload;
+        const index = state.orders.findIndex(order => order.id === orderId);
+        if (index !== -1) {
+          state.orders[index].technician = technician;
+        }
+      })
+      .addCase(assignTechnician.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 }); 
-export const {setTechnician} = orderSlice.actions;
 export const selectOrders = (state) => state.order.orders;
-export const selectTechnician = (state) => state.order.techinician;
+export const selectCurrentUser = (state) => state.order.currentUser;
 export default orderSlice.reducer;

@@ -19,7 +19,7 @@ import ViewOrderPage from './pages/Manager/Order/Order.jsx';
 import ViewRequestsPage from './pages/Manager/Request.jsx';
 import ManageStation from './pages/Manager/Station.jsx';
 import ManageAccount from './pages/Admin/Account.jsx';
-import Schedule from './pages/Technician/Calendar.jsx';
+import Schedule from './pages/Technician/request.jsx';
 
 function App() {
   const navigate = useNavigate();
