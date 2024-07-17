@@ -16,9 +16,9 @@ const Login = () => {
                 message.success(`Login successful. Welcome, ${user.name}!`);
                 localStorage.setItem('user', JSON.stringify(user));
                 if (user.role === 'admin') {
-                    navigate('/admin-dashboard');
+                    navigate('/account');
                 } else if (user.role === 'manager') {
-                    navigate('/order');
+                    navigate('/requestList');
                 } else {
                     navigate('/calendar');
                 }
