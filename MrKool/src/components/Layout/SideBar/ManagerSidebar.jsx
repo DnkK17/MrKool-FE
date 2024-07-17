@@ -8,11 +8,12 @@ const { Title, Text } = Typography;
 
 const ManagerSidebar = () => {
   const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem('user'));
 
   const handleMenuClick = ({ key }) => {
     if (key === '/logout') {
       console.log('Logging out...');
-      sessionStorage.clear();
+      localStorage.removeItem('user'); // Clear user from localStorage
       navigate('/');
     } else {
       navigate(key);
@@ -22,10 +23,10 @@ const ManagerSidebar = () => {
   return (
     <Sider collapsible>
       <div className="dashboard-logo" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}>
-        <Avatar size={64} src="https://static.vecteezy.com/system/resources/previews/004/607/791/non_2x/man-face-emotive-icon-smiling-male-character-in-blue-shirt-flat-illustration-isolated-on-white-happy-human-psychological-portrait-positive-emotions-user-avatar-for-app-web-design-vector.jpg" />
+        <Avatar size={64} src={user.avatar} />
         <div className="user-info" style={{ marginLeft: '16px' }}>
-          <Title level={4} style={{ color: 'white', textAlign: 'center' }}>Manager</Title>
-          <Text className="white-text" style={{ textAlign: 'center' }}>Manager</Text>
+          <Title level={4} style={{ color: 'white', textAlign: 'center' }}>{user.name}</Title>
+          <Text className="white-text" style={{ textAlign: 'center' }}>{user.role}</Text>
         </div>
       </div>
       <Menu

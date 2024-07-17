@@ -1,42 +1,50 @@
+// requestSlice.js
+
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import api from '../../util/api';
+import axios from 'axios';
 
-export const createRequest = createAsyncThunk(
-  'request/createRequest',
-  async (params, { rejectWithValue }) => {
+// Thay đổi URL API tương ứng với mock API của bạn
+const API_URL = 'https://65459cb4fe036a2fa9549229.mockapi.io/request';
+
+// Tạo async thunks để gọi API
+export const fetchRequest = createAsyncThunk(
+  'request/fetchRequest',
+  async (_, { rejectWithValue }) => {
     try {
-      const response = await api.createRequest(params);
+      const response = await axios.get(API_URL);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const updateRequestStatus = createAsyncThunk(
+  'request/updateRequestStatus',
+  async ({ id, data }, { rejectWithValue, dispatch }) => {
+    try {
+      const response = await axios.put(`${API_URL}/${id}`, data);
+      dispatch(fetchRequest());
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
   }
 );
-
-export const approveByManager = createAsyncThunk(
-  'request/approveByManager',
-  async ({ requestID, technicianID, data }, { rejectWithValue }) => {
+export const deleteRequest = createAsyncThunk(
+  'request/deleteRequest',
+  async (id, { rejectWithValue, dispatch }) => {
     try {
-      const response = await api.approveByManager(requestID, technicianID, data);
-      return response.data;
+      await axios.delete(`${API_URL}/${id}`);
+      dispatch(fetchRequest()); // Cập nhật lại danh sách request sau khi xóa
+      return id; // Trả về id của request đã xóa để xử lý trong reducer
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
   }
 );
 
-export const approveByTechnician = createAsyncThunk(
-  'request/approveByTechnician',
-  async ({ id, data }, { rejectWithValue }) => {
-    try {
-      const response = await api.approveByTechnician(id, data);
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response.data);
-    }
-  }
-);
-
+// Khởi tạo slice
 const requestSlice = createSlice({
   name: 'request',
   initialState: {
@@ -47,42 +55,39 @@ const requestSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(createRequest.pending, (state) => {
+      .addCase(fetchRequest.pending, (state) => {
         state.loading = true;
       })
-      .addCase(createRequest.fulfilled, (state, action) => {
+      .addCase(fetchRequest.fulfilled, (state, action) => {
         state.loading = false;
-        state.requests.push(action.payload);
+        state.requests = action.payload;
       })
-      .addCase(createRequest.rejected, (state, action) => {
+      .addCase(fetchRequest.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(approveByManager.pending, (state) => {
+      .addCase(updateRequestStatus.pending, (state) => {
         state.loading = true;
       })
-      .addCase(approveByManager.fulfilled, (state, action) => {
+      .addCase(updateRequestStatus.fulfilled, (state, action) => {
         state.loading = false;
-        const index = state.requests.findIndex(request => request.id === action.payload.id);
+        const index = state.requests.findIndex(req => req.requestID === action.payload.requestID);
         if (index !== -1) {
-          state.requests[index] = action.payload;
+          state.requests[index].status = action.payload.status;
         }
       })
-      .addCase(approveByManager.rejected, (state, action) => {
+      .addCase(updateRequestStatus.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(approveByTechnician.pending, (state) => {
+      .addCase(deleteRequest.pending, (state) => {
         state.loading = true;
       })
-      .addCase(approveByTechnician.fulfilled, (state, action) => {
+      .addCase(deleteRequest.fulfilled, (state, action) => {
         state.loading = false;
-        const index = state.requests.findIndex(request => request.id === action.payload.id);
-        if (index !== -1) {
-          state.requests[index] = action.payload;
-        }
+        state.requests = state.requests.filter(req => req.requestID !== action.payload.requestID); // Xóa request khỏi danh sách
       })
-      .addCase(approveByTechnician.rejected, (state, action) => {
+      .addCase(deleteRequest.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
