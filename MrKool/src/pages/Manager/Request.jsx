@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Table, Spin, Tag } from 'antd';
+import { Button, Table, Tag } from 'antd';
 
 const ViewRequestsPage = () => {
     const [requests, setRequests] = useState([

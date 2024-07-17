@@ -1,35 +1,22 @@
-import React, { useState } from 'react';
-import { Layout, Typography, List, Card, Space, Button, Row, Col, Modal, Form, Input, message } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Layout, Typography, List, Card, Space, Button, Row, Col, Modal, Form, Input, message, Spin } from 'antd';
 import { EditOutlined, DeleteOutlined, TeamOutlined } from '@ant-design/icons';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchStations } from '../../redux/slice/stationSlice';
 import '../../styles/dashboard.css';
 
 const { Content } = Layout;
 const { Title, Text } = Typography;
 
-const ManageArea = () => {
-  const [stations, setStations] = useState([
-    {
-      id: 1,
-      manager: 'John Doe',
-      team: ['Alice', 'Bob', 'Charlie'],
-      address: '123 Main St, Springfield, USA',
-    },
-    {
-      id: 2,
-      manager: 'Jane Smith',
-      team: ['Dave', 'Eve', 'Frank'],
-      address: '456 Elm St, Shelbyville, USA',
-    },
-    {
-      id: 3,
-      manager: 'Michael Johnson',
-      team: ['George', 'Hannah', 'Ian'],
-      address: '789 Oak St, Capital City, USA',
-    },
-  ]);
-
+const ManageStation = () => {
+  const dispatch = useDispatch();
+  const { stations, loading, error } = useSelector(state => state.station);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingStation, setEditingStation] = useState(null);
+console.log(stations);
+  useEffect(() => {
+    dispatch(fetchStations());
+  }, [dispatch]);
 
   const showEditModal = station => {
     setEditingStation(station);
@@ -48,9 +35,9 @@ const ManageArea = () => {
   };
 
   const renderStation = station => (
-    <Col xs={24} sm={24} md={12} lg={8} xl={8} key={station.id}>
+    <Col xs={24} sm={24} md={12} lg={8} xl={8} key={station.stationID}>
       <Card
-        title={`Station ${station.id}`}
+        title={`Station ${station.stationID}`}
         extra={
           <Space>
             <Button icon={<EditOutlined />} onClick={() => showEditModal(station)} />
@@ -77,14 +64,24 @@ const ManageArea = () => {
     </Col>
   );
 
+  if (loading) {
+    return <Spin size="large" />;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+  if (!stations) {
+    return <Spin size="large" />;
+  }
+  
   return (
     <Content style={{ padding: '24px', minHeight: '360px' }}>
       <Title level={2}>Manage Area</Title>
       <Row gutter={[16, 16]}>
-        {stations.map(renderStation)}
-      </Row>
+      {stations.map(station => renderStation(station))}      </Row>
       <Modal
-        title={`Edit Station ${editingStation ? editingStation.id : ''}`}
+        title={`Edit Station ${editingStation ? editingStation.stationID : ''}`}
         visible={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
@@ -120,4 +117,4 @@ const ManageArea = () => {
   );
 };
 
-export default ManageArea;
+export default ManageStation;

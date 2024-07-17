@@ -35,8 +35,8 @@ const ManagerSidebar = () => {
         onClick={handleMenuClick}
         style={{ fontSize: '16px' }}
       >
-        <Menu.Item key="/calendar" icon={<DollarOutlined style={{ fontSize: '18px', marginRight: '8px' }} />} style={{ padding: '8px 16px', marginBottom: '8px' }}>
-          Calendar
+        <Menu.Item key="/station" icon={<DollarOutlined style={{ fontSize: '18px', marginRight: '8px' }} />} style={{ padding: '8px 16px', marginBottom: '8px' }}>
+          Stations
         </Menu.Item>
         <Menu.Item key="/requestList" icon={<FormOutlined  style={{ fontSize: '18px', marginRight: '8px' }} />} style={{ padding: '8px 16px', marginBottom: '8px' }}>
           Manage Request

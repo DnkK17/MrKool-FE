@@ -20,7 +20,7 @@ export const store = configureStore({
         request: requestSlice,
         station: stationSlice,
         payment: paymentSlice,
-        order: orderSlice
+        order: orderSlice,
     },
     // middleware: getDefaulMiddleWare => getDefaulMiddleWare().concat(api.middleware),
     devTools: true
