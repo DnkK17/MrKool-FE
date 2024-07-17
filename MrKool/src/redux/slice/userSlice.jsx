@@ -1,99 +1,120 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+// src/redux/slice/userSlice.js
 
-// Async thunk action to handle login
-export const loginUser = createAsyncThunk(
-  'user/loginUser',
-  async (userData, { rejectWithValue }) => {
-    try {
-      // Perform API call for login (replace with your actual API endpoint)
-      const response = await fetch('https://65a09e6c600f49256fb01938.mockapi.io/api/users', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userData),
-      });
-      
-      if (!response.ok) {
-        throw new Error('Login failed');
-      }
-      
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-// Async thunk action to handle registration
-export const registerUser = createAsyncThunk(
-  'user/registerUser',
-  async (userData, { rejectWithValue }) => {
-    try {
-      // Perform API call for registration (replace with your actual API endpoint)
-      const response = await fetch('https://65a09e6c600f49256fb01938.mockapi.io/api/users', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userData),
-      });
-      
-      if (!response.ok) {
-        throw new Error('Registration failed');
-      }
-      
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
+// Fetch all accounts
+export const fetchAccounts = createAsyncThunk('accounts/fetchAccounts', async () => {
+  const response = await fetch('https://65a09e6c600f49256fb01938.mockapi.io/api/users');
+  return response.json();
+});
 
-// Define initial state and reducers for user slice
+// Create new account
+export const createAccount = createAsyncThunk('accounts/createAccount', async (accountData) => {
+  const response = await fetch('https://65a09e6c600f49256fb01938.mockapi.io/api/users', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(accountData),
+  });
+  return response.json();
+});
+
+// Update an existing account
+export const updateAccount = createAsyncThunk('accounts/updateAccount', async ({ id, data }) => {
+  const response = await fetch(`https://65a09e6c600f49256fb01938.mockapi.io/api/users/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
+  return response.json();
+});
+
+// Delete an account
+export const deleteAccount = createAsyncThunk('accounts/deleteAccount', async (accountId) => {
+  await fetch(`https://65a09e6c600f49256fb01938.mockapi.io/api/users/${accountId}`, {
+    method: 'DELETE',
+  });
+  return accountId;
+});
+
+
+
+// Create userSlice
 const userSlice = createSlice({
-  name: 'user',
+  name: 'accounts',
   initialState: {
-    data: null, // Store logged-in user data
+    accounts: [],
     loading: false,
     error: null,
   },
-  reducers: {
-    logoutUser: (state) => {
-      state.data = null;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(loginUser.pending, (state) => {
+      // Fetch accounts reducers
+      .addCase(fetchAccounts.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(loginUser.fulfilled, (state, action) => {
+      .addCase(fetchAccounts.fulfilled, (state, action) => {
         state.loading = false;
-        state.data = action.payload.user; // Assuming the API returns user data
+        state.accounts = action.payload;
       })
-      .addCase(loginUser.rejected, (state, action) => {
+      .addCase(fetchAccounts.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       })
-      .addCase(registerUser.pending, (state) => {
+
+      // Add account reducers
+      .addCase(createAccount.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(registerUser.fulfilled, (state, action) => {
+      .addCase(createAccount.fulfilled, (state, action) => {
         state.loading = false;
-        state.data = action.payload.user; // Assuming the API returns user data
+        state.accounts.push(action.payload);
       })
-      .addCase(registerUser.rejected, (state, action) => {
+      .addCase(createAccount.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
+      })
+
+      // Update account reducers
+      .addCase(updateAccount.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateAccount.fulfilled, (state, action) => {
+        state.loading = false;
+        const updatedAccount = action.payload;
+        const index = state.accounts.findIndex(account => account.id === updatedAccount.id);
+        if (index !== -1) {
+          state.accounts = state.accounts.map(account =>
+            account.id === updatedAccount.id ? { ...account, ...updatedAccount } : account
+          );
+        }
+      })
+      .addCase(updateAccount.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+
+      // Delete account reducers
+      .addCase(deleteAccount.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteAccount.fulfilled, (state, action) => {
+        state.loading = false;
+        state.accounts = state.accounts.filter(account => account.id !== action.payload);
+      })
+      .addCase(deleteAccount.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
       });
   },
 });
 
-// Export the reducer and actions
-export const { logoutUser } = userSlice.actions;
 export default userSlice.reducer;

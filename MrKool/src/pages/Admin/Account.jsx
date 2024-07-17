@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, Table, Input, Button, Space, Modal, Form, message } from 'antd';
+import { Typography, Table, Input, Button, Space, Modal, Form, message, Select } from 'antd';
 import { SearchOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
-import '../../styles/dashboard.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchModels, createModel, updateModel, deleteModel } from '../../redux/slice/modelSlice';
+import { fetchAccounts, createAccount, updateAccount, deleteAccount } from '../../redux/slice/userSlice';
 
 const { Title } = Typography;
+const { Option } = Select;
 
-const ManageModel = () => {
+const ManageAccount = () => {
   const dispatch = useDispatch();
+  const accounts = useSelector(state => state.accounts?.accounts);
+  const loading = useSelector(state => state.accounts?.loading);
+
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
@@ -17,23 +20,14 @@ const ManageModel = () => {
   const [formData, setFormData] = useState({});
   const [editingKey, setEditingKey] = useState('');
   const [deleteKey, setDeleteKey] = useState(null);
+  const [editingUser, setEditingUser] = useState(null); 
 
-  const models = useSelector(state => state.model.models);
-  const loading = useSelector(state => state.model.loading);
-  const error = useSelector(state => state.model.error);
 
   useEffect(() => {
-    dispatch(fetchModels());
+    dispatch(fetchAccounts());
   }, [dispatch]);
 
-  useEffect(() => {
-    if (!loading && error) {
-      message.error('Failed to fetch models');
-    }
-  }, [loading, error]);
-
-  let searchInput = null;
-
+  
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -49,9 +43,6 @@ const ManageModel = () => {
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
       <div style={{ padding: 8 }}>
         <Input
-          ref={node => {
-            searchInput = node;
-          }}
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
           onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
@@ -96,58 +87,73 @@ const ManageModel = () => {
   });
 
   const handleEdit = record => {
+    console.log('Editing record:', record); // Debug để xác định record có đúng không
     setModalVisible(true);
-    setFormData(record);
-    setEditingKey(record.conditionerModelID);
+    setEditingUser(record); 
+    setFormData({ ...record }); // Đảm bảo rằng bạn đang sử dụng {...record} để sao chép các thuộc tính của record.
+    setEditingKey(record.id);
+    console.log('Form data:', formData);
   };
-
+  useEffect(() => {
+    if (editingUser) {
+      setFormData({ ...editingUser });
+    }
+  }, [editingUser]);
+  
   const handleDelete = () => {
-    console.log('Deleting model with ID:', deleteKey);  // Log for debugging
-    dispatch(deleteModel(deleteKey));
-    message.success('Model deleted successfully');
+    dispatch(deleteAccount(deleteKey));
+    message.success('Account deleted successfully');
     setConfirmDeleteVisible(false);
     setDeleteKey(null);
   };
 
   const handleModalOk = () => {
     if (editingKey) {
-      dispatch(updateModel({ id: editingKey, data: formData }));
+      dispatch(updateAccount({ id: editingKey, data: formData }));
     } else {
-      dispatch(createModel(formData));
+      dispatch(createAccount(formData));
     }
-    message.success(editingKey ? 'Model updated successfully' : 'Model added successfully');
+    message.success(editingKey ? 'Account updated successfully' : 'Account added successfully');
     setModalVisible(false);
     setEditingKey('');
+    setEditingUser(null);
   };
 
   const handleModalCancel = () => {
     setModalVisible(false);
     setEditingKey('');
+    setEditingUser(null);
   };
 
-  const isEditing = record => record.conditionerModelID === editingKey;
+  const isEditing = record => record.id === editingKey;
 
   const columns = [
     {
       title: 'ID',
-      dataIndex: 'conditionerModelID',
-      key: 'conditionerModelID',
-      ...getColumnSearchProps('conditionerModelID'),
+      dataIndex: 'id',
+      key: 'id',
+      ...getColumnSearchProps('id'),
     },
     {
-      title: 'Title',
-      dataIndex: 'title',
-      key: 'title',
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
     },
     {
-      title: 'Image',
-      dataIndex: 'image',
-      key: 'image',
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email',
     },
     {
-      title: 'Price',
-      dataIndex: 'price',
-      key: 'price',
+      title: 'Avatar',
+      dataIndex: 'avatar',
+      key: 'avatar',
+      render: (text) => <img src={text} alt="Avatar" style={{ width: 50, borderRadius: '50%' }} />,
+    },
+    {
+      title: 'Role',
+      dataIndex: 'role',
+      key: 'role',
     },
     {
       title: 'Action',
@@ -162,25 +168,27 @@ const ManageModel = () => {
         ) : (
           <Space>
             <Button type="primary" icon={<EditOutlined />} size="small" onClick={() => handleEdit(record)}>Edit</Button>
-            <Button type="primary" danger icon={<DeleteOutlined />} size="small" onClick={() => { setConfirmDeleteVisible(true); setDeleteKey(record.conditionerModelID); }}>Delete</Button>
+            <Button type="primary" danger icon={<DeleteOutlined />} size="small" onClick={() => { setConfirmDeleteVisible(true); setDeleteKey(record.id); }}>Delete</Button>
           </Space>
         );
       },
     },
   ];
 
+  let searchInput = null;
+
   return (
     <div className='account-container'>
       <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
-        <Title level={4}>Managing the Models</Title>
+        <Title level={4}>Managing the Accounts</Title>
         <Button type="primary" onClick={() => { setModalVisible(true); setFormData({}); setEditingKey(''); }} style={{ marginBottom: 16 }}>
-          Add Model
+          Add Account
         </Button>
-        <Table columns={columns} dataSource={models} pagination={{ pageSize: 100 }} />
+        <Table columns={columns} dataSource={accounts} loading={loading} pagination={{ pageSize: 100 }} />
       </div>
 
       <Modal
-        title={editingKey ? "Edit Model" : "Add Model"}
+        title={editingKey ? "Edit Account" : "Add Account"}
         visible={modalVisible}
         onOk={handleModalOk}
         onCancel={handleModalCancel}
@@ -189,31 +197,39 @@ const ManageModel = () => {
       >
         <Form
           layout="vertical"
-          initialValues={{ remember: true }}
+          initialValues={formData}
         >
           <Form.Item
-            label="Title"
-            name="title"
-            initialValue={formData.title}
-            rules={[{ required: true, message: 'Please input the title!' }]}
+            label="Name"
+            name="name"
+            rules={[{ required: true, message: 'Please input the name!' }]}
           >
-            <Input onChange={e => setFormData({ ...formData, title: e.target.value })} value={formData.title} />
+            <Input onChange={e => setFormData({ ...formData, name: e.target.value })} value={formData.name} />
           </Form.Item>
           <Form.Item
-            label="Image"
-            name="image"
-            initialValue={formData.image}
-            rules={[{ required: true, message: 'Please input the description!' }]}
+            label="Email"
+            name="email"
+            rules={[{ required: true, message: 'Please input the email!' }]}
           >
-            <Input onChange={e => setFormData({ ...formData, description: e.target.value })} value={formData.description} />
+            <Input onChange={e => setFormData({ ...formData, email: e.target.value })} value={formData.email} />
           </Form.Item>
           <Form.Item
-            label="Price"
-            name="price"
-            initialValue={formData.price}
-            rules={[{ required: true, message: 'Please input the price!' }]}
+            label="Avatar"
+            name="avatar"
+            rules={[{ required: true, message: 'Please input the avatar URL!' }]}
           >
-            <Input type="number" onChange={e => setFormData({ ...formData, price: e.target.value })} value={formData.price} />
+            <Input onChange={e => setFormData({ ...formData, avatar: e.target.value })} value={formData.avatar} />
+          </Form.Item>
+          <Form.Item
+            label="Role"
+            name="role"
+            rules={[{ required: true, message: 'Please select the role!' }]}
+          >
+            <Select onChange={value => setFormData({ ...formData, role: value })} value={formData.role} placeholder="Select a role">
+              <Option value="manager">Manager</Option>
+              <Option value="customer">Customer</Option>
+              <Option value="technician">Technician</Option>
+            </Select>
           </Form.Item>
         </Form>
       </Modal>
@@ -226,10 +242,10 @@ const ManageModel = () => {
         okText="Delete"
         cancelText="Cancel"
       >
-        <p>Are you sure you want to delete this Model?</p>
+        <p>Are you sure you want to delete this Account?</p>
       </Modal>
     </div>
   );
 };
 
-export default ManageModel;
+export default ManageAccount;

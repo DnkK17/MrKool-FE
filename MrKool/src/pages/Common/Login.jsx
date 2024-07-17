@@ -17,8 +17,10 @@ const Login = () => {
                 localStorage.setItem('user', JSON.stringify(user));
                 if (user.role === 'admin') {
                     navigate('/admin-dashboard');
+                } else if (user.role === 'manager') {
+                    navigate('/order');
                 } else {
-                    navigate('/home');
+                    navigate('/calendar');
                 }
             } else {
                 message.error('Invalid email or password.');

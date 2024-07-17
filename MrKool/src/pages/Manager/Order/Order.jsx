@@ -26,9 +26,11 @@ const ViewOrderPage = () => {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
-      render: (status) => (
-        <Tag color={status === 'Completed' ? 'green' : status === 'Pending' ? 'blue' : 'orange'}>{status}</Tag>
-      ),
+      render: (status) => {
+        const statusText = status === 0 ? 'In Progress' : status === 1 ? 'Completed' : 'Unknown';
+        const statusColor = status === 1 ? 'green' : 'blue'; // Tùy chỉnh màu sắc tại đây
+        return <Tag color={statusColor}>{statusText}</Tag>
+      },
     },
     {
       title: 'Technician',

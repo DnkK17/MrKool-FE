@@ -13,7 +13,7 @@ import orderSlice from "./slice/orderSlice";
 export const store = configureStore({
     reducer: {
         service: serviceSlice,
-        user: userSlice,
+        accounts: userSlice,
         auth: authSlice,
         area: areaSlice,
         model: modelSlice,

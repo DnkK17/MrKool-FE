@@ -19,6 +19,7 @@ import ViewOrderPage from './pages/Manager/Order/Order.jsx';
 import ViewRequestsPage from './pages/Manager/Request.jsx';
 import TechnicianViewPage from './pages/Technician/request.jsx';
 import ManageStation from './pages/Manager/Station.jsx';
+import ManageAccount from './pages/Admin/Account.jsx';
 
 function App() {
   const navigate = useNavigate();
@@ -41,6 +42,7 @@ function App() {
           <Route path="/serviceList" element={<ServiceList />} />
           <Route path="/modelList" element={<ManageModel />} />
           <Route path="/area" element={<Area />} />
+          <Route path="/account" element={<ManageAccount/>}/>
         </Route>
         <Route element={<TechinicianLayout />}>
         <Route path='/calendar' element={<TechnicianViewPage/>}/>
