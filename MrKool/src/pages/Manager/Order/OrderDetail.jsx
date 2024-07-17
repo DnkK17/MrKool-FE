@@ -1,63 +1,61 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { Select } from 'antd';
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Descriptions, Tag } from 'antd';
 
-const { Option } = Select;
+const OrderDetail = ({ orderDetail }) => {
+  if (!orderDetail) {
+    return null;
+  }
 
-const OrderDetailPage = () => {
-  const { orderId } = useParams();
-  const [order, setOrder] = useState(null);
-  const [technicians, setTechnicians] = useState([]);
-
-  const simulatedOrder = {
-    id: orderId,
-    customerName: "John Doe",
-    status: "Pending",
-  };
-
-  const simulatedTechnicians = [
-    { id: 1, name: "Technician 1", specialization: "Electrical" },
-    { id: 2, name: "Technician 2", specialization: "Plumbing" },
-  ];
-
-  useEffect(() => {
-    setTimeout(() => {
-      setOrder(simulatedOrder);
-    }, 500);
-
-    setTimeout(() => {
-      setTechnicians(simulatedTechnicians);
-    }, 1000);
-  }, [orderId]);
-
-  const handleStatusChange = (value) => {
-    setOrder({ ...order, status: value });
-  };
+  const { Model, Station, Service, Technician, status } = orderDetail;
 
   return (
     <div>
-      <h2>Order Detail Page</h2>
-      <p>Order ID: {orderId}</p>
-      {order && (
-        <div>
-          <p>Customer Name: {order.customerName}</p>
-          <p>Status: {order.status}</p>
-          <Select defaultValue={order.status} onChange={handleStatusChange}>
-            <Option value="Pending">Pending</Option>
-            <Option value="In Progress">In Progress</Option>
-            <Option value="Completed">Completed</Option>
-          </Select>
-        </div>
-      )}
-
-      <h3>Technicians:</h3>
-      <ul>
-        {technicians.map((technician) => (
-          <li key={technician.id}>{technician.name} - {technician.specialization}</li>
-        ))}
-      </ul>
+      <h2>Chi tiết đơn hàng</h2>
+      <Descriptions bordered column={1}>
+        <Descriptions.Item label="Loại máy lạnh">{Model.title}</Descriptions.Item>
+        <Descriptions.Item label="Dung tích">{Model.capacity}</Descriptions.Item>
+        <Descriptions.Item label="Công suất">{Model.power}</Descriptions.Item>
+        <Descriptions.Item label="Thợ sửa">{Technician}</Descriptions.Item>
+        <Descriptions.Item label="Trạm dịch vụ">{Station}</Descriptions.Item>
+        <Descriptions.Item label="Status">
+          <Tag color={status === 1 ? 'green' : 'blue'}>
+            {status === 1 ? 'Đã hoàn thành' : 'Đang tiến hành'}
+          </Tag>
+        </Descriptions.Item>
+        <Descriptions.Item label="Dịch vụ">
+          <ul>
+            {Service.map((service, index) => (
+              <li key={index}>
+                {service.title} - {service.description}
+              </li>
+            ))}
+          </ul>
+        </Descriptions.Item>
+      </Descriptions>
     </div>
   );
 };
 
-export default OrderDetailPage;
+OrderDetail.propTypes = {
+  orderDetail: PropTypes.shape({
+    Model: PropTypes.shape({
+      title: PropTypes.string.isRequired,
+      capacity: PropTypes.string.isRequired,
+      power: PropTypes.string.isRequired,
+    }).isRequired,
+    Station: PropTypes.shape({
+      stationAddress: PropTypes.string.isRequired,
+    }).isRequired,
+    Service: PropTypes.arrayOf(
+      PropTypes.shape({
+        title: PropTypes.string.isRequired,
+        description: PropTypes.string.isRequired,
+      })
+    ).isRequired,
+    Technician: PropTypes.string.isRequired,
+    status: PropTypes.number.isRequired,
+  }).isRequired,
+};
+
+export default OrderDetail;

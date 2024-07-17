@@ -1283,3 +1283,15 @@ export const mockGeographyData = [
 ];
 
 
+// utils.js
+export const generateRandomTime = () => {
+  const hour = Math.floor(Math.random() * 24);
+  const minute = Math.floor(Math.random() * 60);
+  return `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+};
+
+let orderIdCounter = 1;
+let orderDetailIdCounter = 1;
+
+export const getNextOrderId = () => orderIdCounter++;
+export const getNextOrderDetailId = () => orderDetailIdCounter++;

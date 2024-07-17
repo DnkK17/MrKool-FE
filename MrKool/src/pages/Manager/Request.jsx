@@ -7,14 +7,14 @@ import RequestDetail from './RequestDetail';
 const ViewRequestsPage = () => {
     const dispatch = useDispatch();
     const { requests, loading, error } = useSelector(state => state.request);
-    const [selectedRequest, setSelectedRequest] = useState(null); // Lưu trữ request được chọn
+    const [selectedRequest, setSelectedRequest] = useState(null);
 
     useEffect(() => {
         dispatch(fetchRequest());
     }, [dispatch]);
 
     const handleApprove = (id) => {
-        dispatch(updateRequestStatus({ id: id, data: { status: 1 } }));
+        dispatch(updateRequestStatus({ id, data: { status: 1 } }));
     };
 
     const handleShowDetail = (request) => {
@@ -24,9 +24,11 @@ const ViewRequestsPage = () => {
     const handleCloseModal = () => {
         setSelectedRequest(null);
     };
+
     const handleDeleteRequest = (id) => {
         dispatch(deleteRequest(id));
     };
+
     const columns = [
         { title: 'STT', dataIndex: 'index', key: 'index', render: (text, record, index) => index + 1 },
         { title: 'Ngày bắt đầu', dataIndex: 'date', key: 'date' },
@@ -52,7 +54,6 @@ const ViewRequestsPage = () => {
                             <Button type="primary" onClick={() => handleApprove(record.id)}>
                                 Duyệt
                             </Button>
-
                         </>
                     )}
                     <Button style={{ marginLeft: '8px' }} onClick={() => handleShowDetail(record)}>
@@ -77,9 +78,7 @@ const ViewRequestsPage = () => {
     return (
         <div>
             <h1>Danh sách chờ xác nhận</h1>
-            <Table dataSource={requests} columns={columns} rowKey="requestID"
-            />
-
+            <Table dataSource={requests} columns={columns} rowKey="id" />
             <Modal
                 title="Chi tiết yêu cầu"
                 visible={selectedRequest !== null}

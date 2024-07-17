@@ -1,7 +1,7 @@
-// requestSlice.js
-
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { createOrder } from '../slice/orderSlice';
+import { generateRandomTime, getNextOrderId, getNextOrderDetailId } from '../../util/data';
 
 // Thay đổi URL API tương ứng với mock API của bạn
 const API_URL = 'https://65459cb4fe036a2fa9549229.mockapi.io/request';
@@ -25,12 +25,54 @@ export const updateRequestStatus = createAsyncThunk(
     try {
       const response = await axios.put(`${API_URL}/${id}`, data);
       dispatch(fetchRequest());
+      if (data.status === 1) {
+        const request = response.data;
+        const services = request.Service.map(service => ({
+          title: service.title,
+          description: service.description || ''
+        }));
+        const technicianName = "";
+
+
+        // Chuyển đổi dữ liệu model
+        const models = {
+          title: request.Model.title || '',
+          capacity: request.Model.capacity || '',
+          power: request.Model.power || ''
+        };
+
+        const orderData = {
+          time: generateRandomTime(),
+          status: 0,
+          request: {
+            description: request.description,
+            requestAddress: request.requestAddress,
+            date: request.date,
+            Customer: {
+              name: request.Customer.name,
+              phone: request.Customer.phone
+            }
+          },
+          orderDetail: {
+            orderDetailID: getNextOrderDetailId(),
+            Model: models,
+            Station: request.Station.stationAddress,
+            Service: services
+          },
+          id: getNextOrderId(),
+          requestId: request.id,
+          technician : technicianName 
+        };
+        
+        await dispatch(createOrder(orderData));
+      }
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
   }
 );
+
 export const deleteRequest = createAsyncThunk(
   'request/deleteRequest',
   async (id, { rejectWithValue, dispatch }) => {
