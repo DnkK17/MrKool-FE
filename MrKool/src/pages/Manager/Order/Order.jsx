@@ -58,6 +58,12 @@ const ViewOrderPage = () => {
       render: (text, record) => record.request.Customer.phone,
     },
     {
+      title: 'Kỹ thuật viên',
+      dataIndex: 'technician',
+      key: 'technician',
+      render: (text, record) => record.technician,
+    },
+    {
       title: 'Trạng thái',
       dataIndex: 'status',
       key: 'status',
@@ -105,6 +111,7 @@ const ViewOrderPage = () => {
     <Table dataSource={orders} columns={columns} rowKey="id" pagination={pagination} />
 
     <Modal
+
       visible={selectedOrderDetail !== null}
       onCancel={handleCloseModal}
       footer={null}

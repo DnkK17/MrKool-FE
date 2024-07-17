@@ -7,7 +7,7 @@ const OrderDetail = ({ orderDetail }) => {
     return null;
   }
 
-  const { Model, Station, Service, Technician, status } = orderDetail;
+  const { Model, Station, Service, status } = orderDetail;
 
   return (
     <div>
@@ -16,7 +16,6 @@ const OrderDetail = ({ orderDetail }) => {
         <Descriptions.Item label="Loại máy lạnh">{Model.title}</Descriptions.Item>
         <Descriptions.Item label="Dung tích">{Model.capacity}</Descriptions.Item>
         <Descriptions.Item label="Công suất">{Model.power}</Descriptions.Item>
-        <Descriptions.Item label="Thợ sửa">{Technician}</Descriptions.Item>
         <Descriptions.Item label="Trạm dịch vụ">{Station}</Descriptions.Item>
         <Descriptions.Item label="Status">
           <Tag color={status === 1 ? 'green' : 'blue'}>
@@ -53,7 +52,6 @@ OrderDetail.propTypes = {
         description: PropTypes.string.isRequired,
       })
     ).isRequired,
-    Technician: PropTypes.string.isRequired,
     status: PropTypes.number.isRequired,
   }).isRequired,
 };
