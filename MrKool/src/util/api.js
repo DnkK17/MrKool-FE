@@ -103,7 +103,7 @@ const api = {
     },
     //MODEL
     getModel: () => {
-        const url = "Model/";
+        const url = "Model";
         return axiosClient.get(url);
     },
     getModelById: (id) => {
@@ -178,13 +178,13 @@ const api = {
         const url = `Request/${id}`;
         return axiosClient.get(url);
     },
-    approveByManager: (requestID, technicianID, data) => {
-        const url = `approve/manager/${requestID}/${technicianID}`;
-        return axiosClient.put(url, data);
+    approveByManager: (requestID) => {
+        const url = `/manager/approve/${requestID}`;
+        return axiosClient.put(url);
     },
-    approveByTechnician: (id, data) => {
-        const url = `Request/${id}/approve/techinician`;
-        return axiosClient.put(url, data);
+    approveByTechnician: (id) => {
+        const url = `technician/4/approve/${id}`;
+        return axiosClient.put(url);
     },
     //SERVICE 
      getService: () => {
@@ -198,6 +198,18 @@ const api = {
     searchService: (keyword) => {
         const url = `Service/search/${keyword}`;
         return axiosClient.get(url);
+    },
+    updateService: (id, data) => {
+        const url = `Service/UpdateService/${id}`;
+        return axiosClient.put(url, data);
+    },
+    createService: (params) => {
+        const url = "Service/CreateService";
+        return axiosClient.post(url, params);
+    },
+    deleteService: (id) => {
+        const url = `Service/DeleteService/${id}`;
+        return axiosClient.delete(url);
     },
     //STATION
     getStation: () => {
@@ -221,7 +233,7 @@ const api = {
         return axiosClient.post(url, params);
     },
     deleteStation: (id) => {
-        const url = `Station/DeleteModel/${id}`;
+        const url = `Station/DeleteStation/${id}`;
         return axiosClient.delete(url);
     },
     //TECHNICIAN
@@ -265,6 +277,11 @@ const api = {
     },
     getPayment: () => {
         
+    },
+    //Order detail
+    getOrderDetailByID: (id) => {
+        const url = `OrderDetail/OrderDetail/${id}`;
+        return axiosClient.get(url);
     }
 }
 

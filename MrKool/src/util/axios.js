@@ -3,7 +3,12 @@ import queryString from "query-string";
 
 const axiosClient = axios.create({
   baseURL: "https://serverswd.ddnsking.com/",
+  // baseURL: "https://localhost:7124/",
   headers: {
+    'Access-Control-Allow-Origin': "*",
+    'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+    'Access-Control-Allow-Headers': '*',
+    'Access-Control-Allow-Credentials': true,
     "content-type": "application/json",
   },
   paramsSerializer: (params) => queryString.stringify(params),

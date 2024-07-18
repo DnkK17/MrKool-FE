@@ -1,59 +1,19 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Descriptions, Tag } from 'antd';
 
-const OrderDetail = ({ orderDetail }) => {
-  if (!orderDetail) {
-    return null;
-  }
-
-  const { Model, Station, Service, status } = orderDetail;
+const OrderDetail = ({ order }) => {
+  if (!order) return null;
 
   return (
-    <div>
-      <h2>Chi tiết đơn hàng</h2>
-      <Descriptions bordered column={1}>
-        <Descriptions.Item label="Loại máy lạnh">{Model.title}</Descriptions.Item>
-        <Descriptions.Item label="Dung tích">{Model.capacity}</Descriptions.Item>
-        <Descriptions.Item label="Công suất">{Model.power}</Descriptions.Item>
-        <Descriptions.Item label="Trạm dịch vụ">{Station}</Descriptions.Item>
-        <Descriptions.Item label="Status">
-          <Tag color={status === 1 ? 'green' : 'blue'}>
-            {status === 1 ? 'Đã hoàn thành' : 'Đang tiến hành'}
-          </Tag>
-        </Descriptions.Item>
-        <Descriptions.Item label="Dịch vụ">
-          <ul>
-            {Service.map((service, index) => (
-              <li key={index}>
-                {service.title} - {service.description}
-              </li>
-            ))}
-          </ul>
-        </Descriptions.Item>
-      </Descriptions>
+    <div style={{ maxHeight: '60vh', overflowY: 'auto' }}>
+      <h1>{order.title}</h1>
+      <p><strong>Detail:</strong> {order.detail}</p>
+      <p><strong>Address:</strong> {order.address}</p>
+      <p><strong>Status:</strong> {order.status === true ? 'Not yet' : 'Payment Already'}</p>
+      <img src={order.image} alt="Order Image" style={{ maxWidth: '100%', maxHeight: '200px' }} />
+      <p><strong>Technician ID:</strong> {order.technicianID}</p>
     </div>
   );
-};
-
-OrderDetail.propTypes = {
-  orderDetail: PropTypes.shape({
-    Model: PropTypes.shape({
-      title: PropTypes.string.isRequired,
-      capacity: PropTypes.string.isRequired,
-      power: PropTypes.string.isRequired,
-    }).isRequired,
-    Station: PropTypes.shape({
-      stationAddress: PropTypes.string.isRequired,
-    }).isRequired,
-    Service: PropTypes.arrayOf(
-      PropTypes.shape({
-        title: PropTypes.string.isRequired,
-        description: PropTypes.string.isRequired,
-      })
-    ).isRequired,
-    status: PropTypes.number.isRequired,
-  }).isRequired,
 };
 
 export default OrderDetail;

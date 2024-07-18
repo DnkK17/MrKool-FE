@@ -1,0 +1,17 @@
+/* Trạng thái Pending */
+.status-pending {
+    color: #fadb14; /* Màu vàng */
+    font-weight: bold;
+}
+
+/* Trạng thái Processing */
+.status-processing {
+    color: #1890ff; /* Màu xanh dương */
+    font-weight: bold;
+}
+
+/* Trạng thái Approved */
+.status-approved {
+    color: #52c41a; /* Màu xanh lá cây */
+    font-weight: bold;
+}
