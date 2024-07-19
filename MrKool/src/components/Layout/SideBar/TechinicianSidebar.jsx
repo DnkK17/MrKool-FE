@@ -40,6 +40,9 @@ const TechinicianSidebar = () => {
         <Menu.Item key="/calendar" icon={<CalendarOutlined  style={{ fontSize: '18px', marginRight: '8px' }} />} style={{ padding: '8px 16px', marginBottom: '8px' }}>
           Calendar
         </Menu.Item>
+        <Menu.Item key="/orderList" icon={<CalendarOutlined  style={{ fontSize: '18px', marginRight: '8px' }} />} style={{ padding: '8px 16px', marginBottom: '8px' }}>
+          Order
+        </Menu.Item>
         <Divider style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)' }} />
         <Menu.Item key="/rer" icon={<BellOutlined style={{ fontSize: '18px', marginRight: '8px' }} />} style={{ padding: '8px 16px', marginBottom: '8px' }}>
           Notifications

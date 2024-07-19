@@ -119,7 +119,7 @@ const api = {
         return axiosClient.put(url, data);
     },
     createModel: (params) => {
-        const url = "Model/CreateModel";
+        const url = "/CreateModel";
         return axiosClient.post(url, params);
     },
     deleteModel: (id) => {
@@ -153,7 +153,7 @@ const api = {
         return axiosClient.delete(url);
     },
     updateOrderStatus: (id, data) => {
-        const url = `Order/techinician/complete/${id}`;
+        const url = `Order/technician/complete/${id}`;
         return axiosClient.put(url, data);
     },
     //ORDER DETAIL

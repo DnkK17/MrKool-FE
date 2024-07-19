@@ -57,7 +57,7 @@ const OrderListPage = () => {
 
     // Các cột của bảng danh sách order
     const columns = [
-        { title: 'ID', dataIndex: '$id', key: 'id' },
+        { title: 'Number', dataIndex: 'index', key: 'index', render: (text, record, index) => index + 1},
         { title: 'Time', dataIndex: 'time', key: 'time', render: (text) => moment(text).format('HH:mm A') },
         { title: 'Order Date', dataIndex: 'date', key: 'orderDate' },
         {
@@ -68,10 +68,10 @@ const OrderListPage = () => {
                 let statusText, statusColor;
                 switch (status) {
                     case 0:
-                        statusText = 'Processing';
+                        statusText = 'Pending';
                         statusColor = 'blue';
                         break;
-                    case 1: statusText = 'Done';
+                    case 1: statusText = 'Processing';
                     statusColor = 'green';
                     break;
                        

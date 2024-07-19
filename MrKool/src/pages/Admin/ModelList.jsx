@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, Table, Input, Button, Space, Modal, Form, message} from 'antd';
+import { Typography, Table, Input, Button, Space, Modal, Form, message } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import '../../styles/dashboard.css';
 import modelApi from '../../util/api'; // Import your API functions
@@ -14,6 +14,8 @@ const ManageModel = () => {
   const [deleteKey, setDeleteKey] = useState(null);
   const [models, setModels] = useState([]); // State to hold models data
   const [loading, setLoading] = useState(false);
+  const [imageError, setImageError] = useState('');
+  const [imageUrl, setImageUrl] = useState(''); // State for image URL
 
   useEffect(() => {
     fetchModels();
@@ -33,12 +35,19 @@ const ManageModel = () => {
   const handleEdit = record => {
     setModalVisible(true);
     setFormData(record);
+    setImageUrl(record.image); // Set image URL for preview
     setEditingKey(record.conditionerModelID);
   };
 
   const handleSearch = value => {
     const searchText = value.toLowerCase();
     setSearchText(searchText);
+  };
+
+  const handleImageUrlChange = e => {
+    const url = e.target.value;
+    setImageUrl(url);
+    setFormData({ ...formData, image: url });
   };
 
   const handleDelete = async () => {
@@ -86,11 +95,8 @@ const ManageModel = () => {
   const isEditing = record => record.conditionerModelID === editingKey;
 
   const columns = [
-    {
-      title: 'ID',
-      dataIndex: 'conditionerModelID',
-      key: 'conditionerModelID',
-    },
+    { title: 'Number', dataIndex: 'index', key: 'index', render: (text, record, index) => index + 1},
+
     {
       title: 'Title',
       dataIndex: 'title',
@@ -135,7 +141,7 @@ const ManageModel = () => {
           style={{ width: 300, marginBottom: 16 }}
         />
         <div>
-          <Button type="primary" onClick={() => { setModalVisible(true); setFormData({}); setEditingKey(''); }} style={{ marginBottom: 16 }}>
+          <Button type="primary" onClick={() => { setModalVisible(true); setFormData({}); setImageUrl(''); setEditingKey(''); }} style={{ marginBottom: 16 }}>
             Add Model
           </Button>
         </div>
@@ -169,8 +175,10 @@ const ManageModel = () => {
             name="image"
             initialValue={formData.image}
             rules={[{ required: true, message: 'Please input the image URL!' }]}
+            help={imageError && <span style={{ color: 'red' }}>{imageError}</span>}
           >
-            <Input onChange={e => setFormData({ ...formData, image: e.target.value })} value={formData.image} />
+            <Input onChange={handleImageUrlChange} value={imageUrl} />
+            {imageUrl && <img src={imageUrl} alt="preview" style={{ width: '100px', marginTop: '10px' }} />}
           </Form.Item>
         </Form>
       </Modal>

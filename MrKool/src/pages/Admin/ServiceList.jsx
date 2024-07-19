@@ -61,7 +61,7 @@ const ManageService = () => {
                 try {
                     await serviceApi.deleteService(serviceID);
                     message.success('Service deleted successfully');
-                    fetchServices();
+                    setServices(prevModels => prevModels.filter(service=> service.serviceID !== serviceID));
                 } catch (error) {
                     console.error("Failed to delete service", error);
                     message.error('Failed to delete service');
@@ -95,7 +95,7 @@ const ManageService = () => {
     };
 
     const columns = [
-        { title: 'ID', dataIndex: '$id', key: 'id' },
+        { title: 'Number', dataIndex: 'index', key: 'index', render: (text, record, index) => index + 1},
         { title: 'Service', dataIndex: 'serviceTitle', key: 'serviceTitle' },
         { title: 'Description', dataIndex: 'description', key: 'description' },
         {
@@ -110,7 +110,7 @@ const ManageService = () => {
             render: (text, record) => (
                 <span>
                     <Button onClick={() => handleEdit(record)}>Edit</Button>
-                    <Button onClick={() => handleDelete(record.$id)} danger style={{ marginLeft: 8 }}>Delete</Button>
+                    <Button onClick={() => handleDelete(record.serviceID)} danger style={{ marginLeft: 8 }}>Delete</Button>
                 </span>
             ),
         },

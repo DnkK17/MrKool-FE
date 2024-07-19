@@ -51,7 +51,7 @@ const ViewRequestPage = () => {
     };
 
     const columns = [
-        { title: 'ID', dataIndex: '$id', key: 'id' },
+        { title: 'Number', dataIndex: 'index', key: 'index', render: (text, record, index) => index + 1},
         { title: 'Description', dataIndex: 'description', key: 'description' },
         {
             title: 'Status', dataIndex: 'status', key: 'status',
@@ -88,17 +88,17 @@ const ViewRequestPage = () => {
                     return (
                         <Button
                             style={{ backgroundColor: '#1890ff', color: 'white' }}
-                            onClick={() => handleManagerApprove(record.$id)}
+                            onClick={() => handleManagerApprove(record.requestID)}
                         >
                            Processing
                         </Button>
                     );
                 }
-                if (user.role === 'technician' && record.status === 0) {
+                if (user.role === 'technician' && record.status === 1) {
                     return (
                         <Button
                             style={{ backgroundColor: '#52c41a', color: 'white' }}
-                            onClick={() => handleTechnicianApprove(record.$id)}
+                            onClick={() => handleTechnicianApprove(record.requestID)}
                         >
                             Approve
                         </Button>
